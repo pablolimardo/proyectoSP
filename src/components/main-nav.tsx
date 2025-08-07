@@ -1,43 +1,33 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from '@/components/ui/sidebar';
-import { FilePlus2, History, Book, BookMarked } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', label: 'Cargar Datos', icon: FilePlus2 },
-  { href: '/historial', label: 'La Planilla (Historial)', icon: History },
-  { href: '/guia-dosificacion', label: 'Guía de Dosificación', icon: Book },
-  { href: '/guia-parshall', label: 'Guía Parshall', icon: BookMarked },
+  { href: '/', label: 'Cargar Datos' },
+  { href: '/historial', label: 'La Planilla (Historial)' },
+  { href: '/guia-dosificacion', label: 'Guía de Dosificación' },
+  { href: '/guia-parshall', label: 'Guía Parshall' },
 ];
 
 export function MainNav() {
   const pathname = usePathname();
 
   return (
-    <SidebarMenu className="p-4">
+    <nav className="hidden md:flex gap-6 items-center">
       {navItems.map((item) => (
-        <SidebarMenuItem key={item.href}>
-          <Link href={item.href}>
-            <SidebarMenuButton
-              isActive={pathname === item.href}
-              className="text-base"
-              size="lg"
-              asChild
-            >
-              <div>
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
-              </div>
-            </SidebarMenuButton>
-          </Link>
-        </SidebarMenuItem>
+        <Link 
+          key={item.href}
+          href={item.href}
+          className={cn(
+            'text-lg font-medium transition-colors hover:text-primary',
+            pathname === item.href ? 'text-primary' : 'text-muted-foreground'
+          )}
+        >
+          {item.label}
+        </Link>
       ))}
-    </SidebarMenu>
+    </nav>
   );
 }
