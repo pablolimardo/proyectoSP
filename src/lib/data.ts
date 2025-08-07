@@ -1,5 +1,5 @@
 import type { PlantRecord } from './types';
-import { db } from './firebase';
+import { db, admin } from './firebase';
 
 const RECORDS_COLLECTION = 'registros_planta';
 
@@ -52,5 +52,9 @@ export async function getRecordById(id: string): Promise<PlantRecord | null> {
 
 // This function should only be called from server-side code.
 export async function addRecord(record: Omit<PlantRecord, 'id'>): Promise<void> {
-    await db.collection(RECORDS_COLLECTION).add(record);
+    const recordWithFirestoreTimestamp = {
+        ...record,
+        timestamp: admin.firestore.Timestamp.fromDate(record.timestamp),
+    };
+    await db.collection(RECORDS_COLLECTION).add(recordWithFirestoreTimestamp);
 }
