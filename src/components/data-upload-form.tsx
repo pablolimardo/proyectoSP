@@ -175,17 +175,23 @@ export function DataUploadForm() {
 
           <AccordionItem value="item-pac-soda">
             <AccordionTrigger className="text-xl font-headline">PAC y SODA</AccordionTrigger>
-            <AccordionContent className="p-2 space-y-4">
-                <h3 className="text-lg font-semibold font-headline">PAC</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <AccordionContent className="p-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-lg font-semibold font-headline mb-4">PAC</h3>
+                  <div className="space-y-4">
                     {renderNumericInput('pac.ml_min', 'ml/min')}
                     {renderNumericInput('pac.ppm', 'ppm')}
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold font-headline mt-4">SODA</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold font-headline mb-4">SODA</h3>
+                  <div className="space-y-4">
                     {renderNumericInput('soda.ml_min', 'ml/min')}
                     {renderNumericInput('soda.ppm', 'ppm')}
+                  </div>
                 </div>
+              </div>
             </AccordionContent>
           </AccordionItem>
           
