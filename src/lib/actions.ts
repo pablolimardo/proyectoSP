@@ -1,8 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { recordSchema, type RecordSchema } from './types';
-import { addRecord } from './data';
+import { recordSchema, type RecordSchema, PlantRecord } from './types';
+import { addRecord, getRecords as dbGetRecords, getRecordById as dbGetRecordById } from './data';
 
 export async function saveRecord(data: RecordSchema) {
   const validation = recordSchema.safeParse(data);
@@ -22,7 +22,6 @@ export async function saveRecord(data: RecordSchema) {
     };
     
     await addRecord(newRecord);
-    console.log('Record saved to Firestore:', newRecord);
     
     revalidatePath('/historial');
 
@@ -37,4 +36,12 @@ export async function saveRecord(data: RecordSchema) {
       message: 'Ocurrió un error al guardar los datos.',
     };
   }
+}
+
+export async function getRecords(filterDate?: Date): Promise<PlantRecord[]> {
+    return dbGetRecords(filterDate);
+}
+
+export async function getRecordById(id: string): Promise<PlantRecord | null> {
+    return dbGetRecordById(id);
 }
