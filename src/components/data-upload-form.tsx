@@ -36,8 +36,8 @@ const defaultValues = {
   turbidezAguaClarificada: 0,
   phAguaClarificada: 0,
   cloro: 0,
-  pac: 0,
-  soda: 0,
+  pac: { ml_min: 0, ppm: 0 },
+  soda: { ml_min: 0, ppm: 0 },
   ebap: { hs: 0, b1: 0, b2: 0, b3: 0, b4: 0 },
   ebac: { hs: 0, b1: 0, b2: 0, b3: 0, b4: 0 },
   filtros: { f1: 0, f2: 0, f3: 0, f4: 0, f5: 0 },
@@ -102,7 +102,7 @@ export function DataUploadForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Accordion type="multiple" defaultValue={['item-1', 'item-2', 'item-agua-caf']} className="w-full">
+        <Accordion type="multiple" defaultValue={['item-1', 'item-2', 'item-agua-caf', 'item-pac-soda']} className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-xl font-headline">Datos Generales</AccordionTrigger>
             <AccordionContent className="p-2">
@@ -169,6 +169,22 @@ export function DataUploadForm() {
                     {renderNumericInput('turbidezAguaClarificada', 'Turbidez')}
                     {renderNumericInput('phAguaClarificada', 'PH')}
                     {renderNumericInput('cloro', 'Cloro')}
+                </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-pac-soda">
+            <AccordionTrigger className="text-xl font-headline">PAC y SODA</AccordionTrigger>
+            <AccordionContent className="p-2 space-y-4">
+                <h3 className="text-lg font-semibold font-headline">PAC</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {renderNumericInput('pac.ml_min', 'ml/min')}
+                    {renderNumericInput('pac.ppm', 'ppm')}
+                </div>
+                <h3 className="text-lg font-semibold font-headline mt-4">SODA</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {renderNumericInput('soda.ml_min', 'ml/min')}
+                    {renderNumericInput('soda.ppm', 'ppm')}
                 </div>
             </AccordionContent>
           </AccordionItem>

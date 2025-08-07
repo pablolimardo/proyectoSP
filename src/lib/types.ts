@@ -14,8 +14,14 @@ export const recordSchema = z.object({
   phAguaClarificada: z.coerce.number(),
   
   cloro: z.coerce.number(),
-  pac: z.coerce.number(),
-  soda: z.coerce.number(),
+  pac: z.object({
+    ml_min: z.coerce.number(),
+    ppm: z.coerce.number(),
+  }),
+  soda: z.object({
+    ml_min: z.coerce.number(),
+    ppm: z.coerce.number(),
+  }),
 
   ebap: z.object({
     hs: z.coerce.number(),

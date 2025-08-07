@@ -65,8 +65,10 @@ export default async function RecordDetailPage({ params }: DetailPageProps) {
             <CardHeader><CardTitle>Químicos</CardTitle></CardHeader>
             <CardContent className="space-y-4">
                 <DetailItem label="Cloro" value={record.cloro} />
-                <DetailItem label="PAC" value={record.pac} />
-                <DetailItem label="Soda" value={record.soda} />
+                <DetailItem label="PAC (ml/min)" value={record.pac.ml_min} />
+                <DetailItem label="PAC (ppm)" value={record.pac.ppm} />
+                <DetailItem label="Soda (ml/min)" value={record.soda.ml_min} />
+                <DetailItem label="Soda (ppm)" value={record.soda.ppm} />
             </CardContent>
         </Card>
 
