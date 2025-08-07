@@ -1,6 +1,7 @@
 import type { PlantRecord } from './types';
 
-const MOCK_DATA: PlantRecord[] = [
+// This is now the single source of truth for our mock data.
+const records: PlantRecord[] = [
     {
         id: '1',
         fecha: '2023-10-27',
@@ -47,18 +48,24 @@ const MOCK_DATA: PlantRecord[] = [
 // In a real app, you would query Firestore and filter by date.
 export async function getRecords(filterDate?: Date): Promise<PlantRecord[]> {
   console.log('Fetching records...', { filterDate });
-  // In a real app, you would connect to Firestore here.
-  // For now, we return mock data.
+  const allRecords = [...records].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  
   if (filterDate) {
     const formattedFilterDate = filterDate.toISOString().split('T')[0];
-    return MOCK_DATA.filter(record => record.fecha === formattedFilterDate);
+    return allRecords.filter(record => record.fecha === formattedFilterDate);
   }
-  return MOCK_DATA;
+  return allRecords;
 }
 
 // This function simulates fetching a single record by its ID.
 export async function getRecordById(id: string): Promise<PlantRecord | null> {
     console.log(`Fetching record with id: ${id}`);
-    const record = MOCK_DATA.find(r => r.id === id);
+    const record = records.find(r => r.id === id);
     return record || null;
+}
+
+// This function simulates adding a new record to our data store.
+export async function addRecord(record: PlantRecord): Promise<void> {
+    console.log('Adding new record...');
+    records.push(record);
 }

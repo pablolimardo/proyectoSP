@@ -2,12 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { recordSchema, type RecordSchema } from './types';
-
-// This is a mock database. In a real application, you would use Firebase Firestore.
-// Example: import { db } from './firebase';
-const MOCK_DB = {
-  records: [],
-};
+import { addRecord } from './data';
 
 export async function saveRecord(data: RecordSchema) {
   const validation = recordSchema.safeParse(data);
@@ -27,11 +22,7 @@ export async function saveRecord(data: RecordSchema) {
       ...validation.data,
     };
     
-    // In a real application, you would save this to Firestore.
-    // e.g., await db.collection('registros_planta').add(newRecord);
-    // @ts-ignore
-    MOCK_DB.records.push(newRecord);
-
+    await addRecord(newRecord);
     console.log('Record saved:', newRecord);
     
     // Revalidate the history page to show the new record
