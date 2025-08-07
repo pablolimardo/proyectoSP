@@ -17,15 +17,13 @@ export async function saveRecord(data: RecordSchema) {
 
   try {
     const newRecord = {
-      id: new Date().getTime().toString(),
       timestamp: new Date(),
       ...validation.data,
     };
     
     await addRecord(newRecord);
-    console.log('Record saved:', newRecord);
+    console.log('Record saved to Firestore:', newRecord);
     
-    // Revalidate the history page to show the new record
     revalidatePath('/historial');
 
     return {
@@ -33,7 +31,7 @@ export async function saveRecord(data: RecordSchema) {
       message: 'Datos guardados correctamente.',
     };
   } catch (error) {
-    console.error('Error saving record:', error);
+    console.error('Error saving record to Firestore:', error);
     return {
       success: false,
       message: 'Ocurrió un error al guardar los datos.',

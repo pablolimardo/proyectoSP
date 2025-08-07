@@ -71,29 +71,29 @@ export default async function RecordDetailPage({ params }: DetailPageProps) {
             <DetailItem label="Fecha" value={record.fecha} />
             <DetailItem label="Hora" value={record.hora} />
             <DetailItem label="Operador" value={<Badge variant="secondary" className="text-base">{record.nombreOperador}</Badge>} />
-            <DetailItem label="Caudal" value={record.caudal} />
+            <DetailItem label="Caudal" value={String(record.caudal)} />
           </CardContent>
         </Card>
 
         <Card>
             <CardHeader><CardTitle>Agua Cruda y Clarificada</CardTitle></CardHeader>
             <CardContent className="space-y-4">
-                <DetailItem label="Turbidez Agua Cruda" value={record.turbidezAguaCruda} />
-                <DetailItem label="pH Agua Cruda" value={record.phAguaCruda} />
+                <DetailItem label="Turbidez Agua Cruda" value={String(record.turbidezAguaCruda)} />
+                <DetailItem label="pH Agua Cruda" value={String(record.phAguaCruda)} />
                 <DetailItem label="Temperatura" value={`${record.temperatura}°C`} />
-                <DetailItem label="Turbidez Agua Clarificada" value={record.turbidezAguaClarificada} />
-                <DetailItem label="pH Agua Clarificada" value={record.phAguaClarificada} />
+                <DetailItem label="Turbidez Agua Clarificada" value={String(record.turbidezAguaClarificada)} />
+                <DetailItem label="pH Agua Clarificada" value={String(record.phAguaClarificada)} />
             </CardContent>
         </Card>
 
         <Card>
             <CardHeader><CardTitle>Químicos</CardTitle></CardHeader>
             <CardContent className="space-y-4">
-                <DetailItem label="Cloro" value={record.cloro} />
-                <DetailItem label="PAC (ml/min)" value={record.pac.ml_min} />
-                <DetailItem label="PAC (ppm)" value={record.pac.ppm} />
-                <DetailItem label="Soda (ml/min)" value={record.soda.ml_min} />
-                <DetailItem label="Soda (ppm)" value={record.soda.ppm} />
+                <DetailItem label="Cloro" value={String(record.cloro)} />
+                <DetailItem label="PAC (ml/min)" value={String(record.pac.ml_min)} />
+                <DetailItem label="PAC (ppm)" value={String(record.pac.ppm)} />
+                <DetailItem label="Soda (ml/min)" value={String(record.soda.ml_min)} />
+                <DetailItem label="Soda (ppm)" value={String(record.soda.ppm)} />
             </CardContent>
         </Card>
 
@@ -107,7 +107,7 @@ export default async function RecordDetailPage({ params }: DetailPageProps) {
         <Card>
             <CardHeader><CardTitle>Módulo EBAP</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
-                <DetailItem label="HS" value={record.ebap.hs} />
+                <DetailItem label="HS" value={String(record.ebap.hs)} />
                 {Object.entries(record.ebap).filter(([key]) => key !== 'hs').map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
             </CardContent>
         </Card>
@@ -115,7 +115,7 @@ export default async function RecordDetailPage({ params }: DetailPageProps) {
         <Card>
             <CardHeader><CardTitle>Módulo EBAC</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
-                <DetailItem label="HS" value={record.ebac.hs} />
+                <DetailItem label="HS" value={String(record.ebac.hs)} />
                 {Object.entries(record.ebac).filter(([key]) => key !== 'hs').map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
             </CardContent>
         </Card>

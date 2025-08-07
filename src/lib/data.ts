@@ -1,9 +1,10 @@
 import type { PlantRecord } from './types';
+import { db } from './firebase';
 
-// This is now the single source of truth for our mock data.
-const records: PlantRecord[] = [
+const RECORDS_COLLECTION = 'plant-records';
+
+const sampleRecords: Omit<PlantRecord, 'id'>[] = [
     {
-        id: '1',
         fecha: '2023-10-27',
         hora: '10:00',
         nombreOperador: 'Juan Pérez',
@@ -23,7 +24,6 @@ const records: PlantRecord[] = [
         observaciones: 'Operación normal.'
     },
     {
-        id: '2',
         fecha: '2023-10-27',
         hora: '14:00',
         nombreOperador: 'Maria Garcia',
@@ -44,28 +44,75 @@ const records: PlantRecord[] = [
     }
 ];
 
-// This function simulates fetching all records.
-// In a real app, you would query Firestore and filter by date.
+// Function to seed the database with initial data
+async function seedDatabase() {
+    const recordsCollection = db.collection(RECORDS_COLLECTION);
+    const snapshot = await recordsCollection.limit(1).get();
+    
+    if (snapshot.empty) {
+        console.log('No records found, seeding database...');
+        const batch = db.batch();
+        sampleRecords.forEach(record => {
+            const docRef = recordsCollection.doc();
+            batch.set(docRef, record);
+        });
+        await batch.commit();
+        console.log('Database seeded successfully.');
+    }
+}
+
+// Seed the database on startup
+seedDatabase().catch(console.error);
+
+
 export async function getRecords(filterDate?: Date): Promise<PlantRecord[]> {
-  console.log('Fetching records...', { filterDate });
-  const allRecords = [...records].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-  
+  console.log('Fetching records from Firestore...', { filterDate });
+  let query: FirebaseFirestore.Query = db.collection(RECORDS_COLLECTION).orderBy('timestamp', 'desc');
+
   if (filterDate) {
-    const formattedFilterDate = filterDate.toISOString().split('T')[0];
-    return allRecords.filter(record => record.fecha === formattedFilterDate);
+    const startOfDay = new Date(filterDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(filterDate);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    query = query.where('timestamp', '>=', startOfDay).where('timestamp', '<=', endOfDay);
   }
-  return allRecords;
+  
+  const snapshot = await query.get();
+  
+  if (snapshot.empty) {
+    return [];
+  }
+
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      // Convert Firestore Timestamp to JS Date
+      timestamp: data.timestamp.toDate(),
+    } as PlantRecord;
+  });
 }
 
-// This function simulates fetching a single record by its ID.
 export async function getRecordById(id: string): Promise<PlantRecord | null> {
-    console.log(`Fetching record with id: ${id}`);
-    const record = records.find(r => r.id === id);
-    return record || null;
+    console.log(`Fetching record with id: ${id} from Firestore`);
+    const docRef = db.collection(RECORDS_COLLECTION).doc(id);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+        return null;
+    }
+
+    const data = doc.data()!;
+    return {
+      id: doc.id,
+      ...data,
+      timestamp: data.timestamp.toDate(),
+    } as PlantRecord;
 }
 
-// This function simulates adding a new record to our data store.
-export async function addRecord(record: PlantRecord): Promise<void> {
-    console.log('Adding new record...');
-    records.push(record);
+export async function addRecord(record: Omit<PlantRecord, 'id'>): Promise<void> {
+    console.log('Adding new record to Firestore...');
+    await db.collection(RECORDS_COLLECTION).add(record);
 }
