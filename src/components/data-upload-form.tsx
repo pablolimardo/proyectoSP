@@ -43,7 +43,7 @@ const defaultValues: RecordSchema = {
   soda: { ml_min: 0, ppm: 0 },
   ebap: { hs: 0, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
   ebac: { hs: 0, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
-  filtros: { f1: "Marcha", f2: "Marcha", f3: "Marcha", f4: "Marcha", f5: "Marcha" },
+  filtros: { f1: "Marcha", f2: "Marcha", f3: "Marcha", f4: "Marcha" },
   observaciones: '',
 };
 
@@ -253,12 +253,11 @@ export function DataUploadForm() {
           <AccordionItem value="item-5">
             <AccordionTrigger className="text-xl font-headline">Módulo Filtros</AccordionTrigger>
             <AccordionContent className="p-2">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {renderSelectInput('filtros.f1', 'Filtro 1')}
                     {renderSelectInput('filtros.f2', 'Filtro 2')}
                     {renderSelectInput('filtros.f3', 'Filtro 3')}
                     {renderSelectInput('filtros.f4', 'Filtro 4')}
-                    {renderSelectInput('filtros.f5', 'Filtro 5')}
                 </div>
             </AccordionContent>
           </AccordionItem>

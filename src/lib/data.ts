@@ -18,7 +18,7 @@ const MOCK_DATA: PlantRecord[] = [
         soda: { ml_min: 5, ppm: 10 },
         ebap: { hs: 2.1, b1: 'Marcha', b2: 'Marcha', b3: 'Detenido', b4: 'Marcha' },
         ebac: { hs: 2.0, b1: 'Marcha', b2: 'Marcha', b3: 'Marcha', b4: 'Purgado' },
-        filtros: { f1: 'Marcha', f2: 'Lavado', f3: 'Marcha', f4: 'Fuera de Servicio', f5: 'Marcha' },
+        filtros: { f1: 'Marcha', f2: 'Lavado', f3: 'Marcha', f4: 'Fuera de Servicio' },
         observaciones: 'Operación normal.'
     },
     {
@@ -38,7 +38,7 @@ const MOCK_DATA: PlantRecord[] = [
         soda: { ml_min: 5.2, ppm: 10.4 },
         ebap: { hs: 2.2, b1: 'Marcha', b2: 'Marcha', b3: 'Marcha', b4: 'Marcha' },
         ebac: { hs: 2.1, b1: 'Marcha', b2: 'Marcha', b3: 'Marcha', b4: 'Marcha' },
-        filtros: { f1: 'Marcha', f2: 'Marcha', f3: 'Marcha', f4: 'Marcha', f5: 'Marcha' },
+        filtros: { f1: 'Marcha', f2: 'Marcha', f3: 'Marcha', f4: 'Marcha' },
         observaciones: 'Se realizó retrolavado en filtro 2.'
     }
 ];

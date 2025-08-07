@@ -46,7 +46,6 @@ export const recordSchema = z.object({
     f2: statusEnum,
     f3: statusEnum,
     f4: statusEnum,
-    f5: statusEnum,
   }),
   
   observaciones: z.string().optional(),
