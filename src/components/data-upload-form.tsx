@@ -102,7 +102,7 @@ export function DataUploadForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Accordion type="multiple" defaultValue={['item-1', 'item-2']} className="w-full">
+        <Accordion type="multiple" defaultValue={['item-1', 'item-2', 'item-agua-caf']} className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-xl font-headline">Datos Generales</AccordionTrigger>
             <AccordionContent className="p-2">
@@ -158,6 +158,17 @@ export function DataUploadForm() {
                     {renderNumericInput('turbidezAguaCruda', 'Turbidez')}
                     {renderNumericInput('phAguaCruda', 'PH')}
                     {renderNumericInput('temperatura', 'Temperatura en C°')}
+                </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-agua-caf">
+            <AccordionTrigger className="text-xl font-headline">Agua CAF</AccordionTrigger>
+            <AccordionContent className="p-2 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {renderNumericInput('turbidezAguaClarificada', 'Turbidez')}
+                    {renderNumericInput('phAguaClarificada', 'PH')}
+                    {renderNumericInput('cloro', 'Cloro')}
                 </div>
             </AccordionContent>
           </AccordionItem>
