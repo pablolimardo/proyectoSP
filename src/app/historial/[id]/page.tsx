@@ -13,9 +13,9 @@ interface DetailPageProps {
 }
 
 const statusDisplay: { [key: string]: { icon: React.ReactNode, text: string, short: string, color: string } } = {
-  "Marcha": { icon: <CheckCircle className="h-4 w-4 text-green-500" />, text: "Marcha", short: "M", color: "text-green-500" },
-  "Detenido": { icon: <XCircle className="h-4 w-4 text-red-500" />, text: "Detenido", short: "D", color: "text-red-500" },
-  "Lavado": { icon: <WashingMachine className="h-4 w-4 text-blue-500" />, text: "Lavado", short: "L", color: "text-blue-500" },
+  "Marcha": { icon: <CheckCircle className="h-4 w-4 text-green-500" />, text: "Marcha", short: "M", color: "text-green-500 font-semibold" },
+  "Detenido": { icon: <XCircle className="h-4 w-4 text-red-500" />, text: "Detenido", short: "D", color: "text-red-500 font-semibold" },
+  "Lavado": { icon: <WashingMachine className="h-4 w-4 text-blue-500" />, text: "Lavado", short: "L", color: "text-blue-500 font-semibold" },
   "Purgado": { icon: <Droplet className="h-4 w-4 text-cyan-500" />, text: "Purgado", short: "P", color: "text-cyan-500" },
   "Local": { icon: <Wrench className="h-4 w-4 text-yellow-500" />, text: "Local", short: "Local", color: "text-yellow-500" },
   "Remoto": { icon: <Radio className="h-4 w-4 text-purple-500" />, text: "Remoto", short: "R", color: "text-purple-500" },
