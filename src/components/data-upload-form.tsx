@@ -91,7 +91,7 @@ export function DataUploadForm() {
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input type="number" {...field} />
+            <Input type="text" inputMode="decimal" {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>
