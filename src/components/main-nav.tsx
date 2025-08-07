@@ -23,14 +23,17 @@ export function MainNav() {
     <SidebarMenu className="p-4">
       {navItems.map((item) => (
         <SidebarMenuItem key={item.href}>
-          <Link href={item.href} legacyBehavior passHref>
+          <Link href={item.href}>
             <SidebarMenuButton
               isActive={pathname === item.href}
               className="text-base"
               size="lg"
+              asChild
             >
-              <item.icon className="h-5 w-5" />
-              <span>{item.label}</span>
+              <div>
+                <item.icon className="h-5 w-5" />
+                <span>{item.label}</span>
+              </div>
             </SidebarMenuButton>
           </Link>
         </SidebarMenuItem>
