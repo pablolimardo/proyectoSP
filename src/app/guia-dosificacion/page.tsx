@@ -2,12 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Image from 'next/image';
 
-export default function GuiaCaudalPage() {
+export default function GuiaDosificacionPage() {
   return (
     <div className="container mx-auto p-4 md:p-8 space-y-6">
       <Card className="w-full max-w-4xl mx-auto shadow-lg">
         <CardHeader>
-          <CardTitle className="text-3xl font-headline">Guía de Caudal del Agua</CardTitle>
+          <CardTitle className="text-3xl font-headline">Guía de Dosificación</CardTitle>
           <CardDescription>
             Una guía de referencia rápida para los operadores.
           </CardDescription>

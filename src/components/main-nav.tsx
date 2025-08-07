@@ -12,7 +12,7 @@ import Link from 'next/link';
 const navItems = [
   { href: '/', label: 'Cargar Datos', icon: FilePlus2 },
   { href: '/historial', label: 'La Planilla (Historial)', icon: History },
-  { href: '/guia-caudal', label: 'Guía de Caudal', icon: Book },
+  { href: '/guia-dosificacion', label: 'Guía de Dosificación', icon: Book },
   { href: '/guia-parshall', label: 'Guía Parshall', icon: BookMarked },
 ];
 
