@@ -24,8 +24,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
-const defaultValues = {
+const statusOptions = ["Marcha", "Detenido", "Lavado", "Purgado", "Local", "Remoto", "Fuera de Servicio"];
+
+const defaultValues: RecordSchema = {
   fecha: '',
   hora: '',
   nombreOperador: '',
@@ -38,9 +41,9 @@ const defaultValues = {
   cloro: 0,
   pac: { ml_min: 0, ppm: 0 },
   soda: { ml_min: 0, ppm: 0 },
-  ebap: { hs: 0, b1: 0, b2: 0, b3: 0, b4: 0 },
-  ebac: { hs: 0, b1: 0, b2: 0, b3: 0, b4: 0 },
-  filtros: { f1: 0, f2: 0, f3: 0, f4: 0, f5: 0 },
+  ebap: { hs: 0, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
+  ebac: { hs: 0, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
+  filtros: { f1: "Marcha", f2: "Marcha", f3: "Marcha", f4: "Marcha", f5: "Marcha" },
   observaciones: '',
 };
 
@@ -98,6 +101,32 @@ export function DataUploadForm() {
       )}
     />
   );
+  
+  const renderSelectInput = (name: any, label: string) => (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar..." />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              {statusOptions.map(option => (
+                <SelectItem key={option} value={option}>{option}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+
 
   return (
     <Form {...form}>
@@ -200,10 +229,10 @@ export function DataUploadForm() {
             <AccordionContent className="p-2">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {renderNumericInput('ebap.hs', 'HS')}
-                    {renderNumericInput('ebap.b1', 'B1')}
-                    {renderNumericInput('ebap.b2', 'B2')}
-                    {renderNumericInput('ebap.b3', 'B3')}
-                    {renderNumericInput('ebap.b4', 'B4')}
+                    {renderSelectInput('ebap.b1', 'B1')}
+                    {renderSelectInput('ebap.b2', 'B2')}
+                    {renderSelectInput('ebap.b3', 'B3')}
+                    {renderSelectInput('ebap.b4', 'B4')}
                 </div>
             </AccordionContent>
           </AccordionItem>
@@ -213,10 +242,10 @@ export function DataUploadForm() {
             <AccordionContent className="p-2">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {renderNumericInput('ebac.hs', 'HS')}
-                    {renderNumericInput('ebac.b1', 'B1')}
-                    {renderNumericInput('ebac.b2', 'B2')}
-                    {renderNumericInput('ebac.b3', 'B3')}
-                    {renderNumericInput('ebac.b4', 'B4')}
+                    {renderSelectInput('ebac.b1', 'B1')}
+                    {renderSelectInput('ebac.b2', 'B2')}
+                    {renderSelectInput('ebac.b3', 'B3')}
+                    {renderSelectInput('ebac.b4', 'B4')}
                 </div>
             </AccordionContent>
           </AccordionItem>
@@ -225,11 +254,11 @@ export function DataUploadForm() {
             <AccordionTrigger className="text-xl font-headline">Módulo Filtros</AccordionTrigger>
             <AccordionContent className="p-2">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    {renderNumericInput('filtros.f1', 'Filtro 1')}
-                    {renderNumericInput('filtros.f2', 'Filtro 2')}
-                    {renderNumericInput('filtros.f3', 'Filtro 3')}
-                    {renderNumericInput('filtros.f4', 'Filtro 4')}
-                    {renderNumericInput('filtros.f5', 'Filtro 5')}
+                    {renderSelectInput('filtros.f1', 'Filtro 1')}
+                    {renderSelectInput('filtros.f2', 'Filtro 2')}
+                    {renderSelectInput('filtros.f3', 'Filtro 3')}
+                    {renderSelectInput('filtros.f4', 'Filtro 4')}
+                    {renderSelectInput('filtros.f5', 'Filtro 5')}
                 </div>
             </AccordionContent>
           </AccordionItem>

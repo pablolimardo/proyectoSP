@@ -16,9 +16,9 @@ const MOCK_DATA: PlantRecord[] = [
         cloro: 1.2,
         pac: { ml_min: 15, ppm: 30 },
         soda: { ml_min: 5, ppm: 10 },
-        ebap: { hs: 2.1, b1: 1.8, b2: 1.9, b3: 2.0, b4: 2.2 },
-        ebac: { hs: 2.0, b1: 1.7, b2: 1.8, b3: 1.9, b4: 2.1 },
-        filtros: { f1: 0.5, f2: 0.6, f3: 0.5, f4: 0.7, f5: 0.6 },
+        ebap: { hs: 2.1, b1: 'Marcha', b2: 'Marcha', b3: 'Detenido', b4: 'Marcha' },
+        ebac: { hs: 2.0, b1: 'Marcha', b2: 'Marcha', b3: 'Marcha', b4: 'Purgado' },
+        filtros: { f1: 'Marcha', f2: 'Lavado', f3: 'Marcha', f4: 'Fuera de Servicio', f5: 'Marcha' },
         observaciones: 'Operación normal.'
     },
     {
@@ -36,9 +36,9 @@ const MOCK_DATA: PlantRecord[] = [
         cloro: 1.3,
         pac: { ml_min: 16, ppm: 32 },
         soda: { ml_min: 5.2, ppm: 10.4 },
-        ebap: { hs: 2.2, b1: 1.9, b2: 2.0, b3: 2.1, b4: 2.3 },
-        ebac: { hs: 2.1, b1: 1.8, b2: 1.9, b3: 2.0, b4: 2.2 },
-        filtros: { f1: 0.6, f2: 0.7, f3: 0.6, f4: 0.8, f5: 0.7 },
+        ebap: { hs: 2.2, b1: 'Marcha', b2: 'Marcha', b3: 'Marcha', b4: 'Marcha' },
+        ebac: { hs: 2.1, b1: 'Marcha', b2: 'Marcha', b3: 'Marcha', b4: 'Marcha' },
+        filtros: { f1: 'Marcha', f2: 'Marcha', f3: 'Marcha', f4: 'Marcha', f5: 'Marcha' },
         observaciones: 'Se realizó retrolavado en filtro 2.'
     }
 ];

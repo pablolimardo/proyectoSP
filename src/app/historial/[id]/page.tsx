@@ -6,18 +6,43 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, WashingMachine, Droplet, Wrench, PowerOff, Radio } from 'lucide-react';
 
 interface DetailPageProps {
   params: { id: string };
 }
 
+const statusDisplay: { [key: string]: { icon: React.ReactNode, text: string, short: string, color: string } } = {
+  "Marcha": { icon: <CheckCircle className="h-4 w-4 text-green-500" />, text: "Marcha", short: "M", color: "text-green-500" },
+  "Detenido": { icon: <XCircle className="h-4 w-4 text-red-500" />, text: "Detenido", short: "D", color: "text-red-500" },
+  "Lavado": { icon: <WashingMachine className="h-4 w-4 text-blue-500" />, text: "Lavado", short: "L", color: "text-blue-500" },
+  "Purgado": { icon: <Droplet className="h-4 w-4 text-cyan-500" />, text: "Purgado", short: "P", color: "text-cyan-500" },
+  "Local": { icon: <Wrench className="h-4 w-4 text-yellow-500" />, text: "Local", short: "Local", color: "text-yellow-500" },
+  "Remoto": { icon: <Radio className="h-4 w-4 text-purple-500" />, text: "Remoto", short: "R", color: "text-purple-500" },
+  "Fuera de Servicio": { icon: <PowerOff className="h-4 w-4 text-gray-500" />, text: "Fuera de Servicio", short: "FS", color: "text-gray-500" },
+}
+
+
 const DetailItem = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div className="flex flex-col space-y-1">
     <p className="text-sm font-medium text-muted-foreground">{label}</p>
-    <p className="text-lg">{value}</p>
+    <div className="text-lg">{value}</div>
   </div>
 );
+
+const StatusItem = ({ label, value }: { label: string; value: string }) => {
+    const display = statusDisplay[value] || { icon: null, text: value, short: value, color: '' };
+    return (
+      <div className="flex flex-col space-y-1">
+        <p className="text-sm font-medium text-muted-foreground">{label}</p>
+        <div className={`flex items-center space-x-2 text-lg ${display.color}`}>
+          {display.icon}
+          <span>{display.text}</span>
+        </div>
+      </div>
+    );
+};
+
 
 export default async function RecordDetailPage({ params }: DetailPageProps) {
   const record = await getRecordById(params.id);
@@ -82,21 +107,23 @@ export default async function RecordDetailPage({ params }: DetailPageProps) {
         <Card>
             <CardHeader><CardTitle>Módulo EBAP</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
-                {Object.entries(record.ebap).map(([key, value]) => <DetailItem key={key} label={key.toUpperCase()} value={value} />)}
+                <DetailItem label="HS" value={record.ebap.hs} />
+                {Object.entries(record.ebap).filter(([key]) => key !== 'hs').map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
             </CardContent>
         </Card>
 
         <Card>
             <CardHeader><CardTitle>Módulo EBAC</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
-                {Object.entries(record.ebac).map(([key, value]) => <DetailItem key={key} label={key.toUpperCase()} value={value} />)}
+                <DetailItem label="HS" value={record.ebac.hs} />
+                {Object.entries(record.ebac).filter(([key]) => key !== 'hs').map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
             </CardContent>
         </Card>
 
         <Card>
             <CardHeader><CardTitle>Módulo Filtros</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
-                {Object.entries(record.filtros).map(([key, value]) => <DetailItem key={key} label={`Filtro ${key.substring(1)}`} value={value} />)}
+                {Object.entries(record.filtros).map(([key, value]) => <StatusItem key={key} label={`Filtro ${key.substring(1)}`} value={value as string} />)}
             </CardContent>
         </Card>
 

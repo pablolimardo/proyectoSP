@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const statusEnum = z.enum(["Marcha", "Detenido", "Lavado", "Purgado", "Local", "Remoto", "Fuera de Servicio"]);
+
 export const recordSchema = z.object({
   fecha: z.string().min(1, 'La fecha es requerida.'),
   hora: z.string().min(1, 'La hora es requerida.'),
@@ -25,26 +27,26 @@ export const recordSchema = z.object({
 
   ebap: z.object({
     hs: z.coerce.number(),
-    b1: z.coerce.number(),
-    b2: z.coerce.number(),
-    b3: z.coerce.number(),
-    b4: z.coerce.number(),
+    b1: statusEnum,
+    b2: statusEnum,
+    b3: statusEnum,
+    b4: statusEnum,
   }),
 
   ebac: z.object({
     hs: z.coerce.number(),
-    b1: z.coerce.number(),
-    b2: z.coerce.number(),
-    b3: z.coerce.number(),
-    b4: z.coerce.number(),
+    b1: statusEnum,
+    b2: statusEnum,
+    b3: statusEnum,
+    b4: statusEnum,
   }),
 
   filtros: z.object({
-    f1: z.coerce.number(),
-    f2: z.coerce.number(),
-    f3: z.coerce.number(),
-    f4: z.coerce.number(),
-    f5: z.coerce.number(),
+    f1: statusEnum,
+    f2: statusEnum,
+    f3: statusEnum,
+    f4: statusEnum,
+    f5: statusEnum,
   }),
   
   observaciones: z.string().optional(),
