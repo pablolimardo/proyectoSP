@@ -151,18 +151,13 @@ export function DataUploadForm() {
           </AccordionItem>
           
           <AccordionItem value="item-2">
-            <AccordionTrigger className="text-xl font-headline">Mediciones de Proceso</AccordionTrigger>
+            <AccordionTrigger className="text-xl font-headline">Agua Cruda</AccordionTrigger>
             <AccordionContent className="p-2 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     {renderNumericInput('caudal', 'Caudal')}
-                    {renderNumericInput('turbidezAguaCruda', 'Turbidez Agua Cruda')}
-                    {renderNumericInput('phAguaCruda', 'pH Agua Cruda')}
-                    {renderNumericInput('temperatura', 'Temperatura')}
-                    {renderNumericInput('turbidezAguaClarificada', 'Turbidez Agua Clarificada')}
-                    {renderNumericInput('phAguaClarificada', 'pH Agua Clarificada')}
-                    {renderNumericInput('cloro', 'Cloro')}
-                    {renderNumericInput('pac', 'PAC')}
-                    {renderNumericInput('soda', 'Soda')}
+                    {renderNumericInput('turbidezAguaCruda', 'Turbidez')}
+                    {renderNumericInput('phAguaCruda', 'PH')}
+                    {renderNumericInput('temperatura', 'Temperatura en C°')}
                 </div>
             </AccordionContent>
           </AccordionItem>
