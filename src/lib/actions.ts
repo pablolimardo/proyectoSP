@@ -24,6 +24,7 @@ export async function saveRecord(data: RecordSchema) {
     await addRecord(newRecord);
     
     revalidatePath('/historial');
+    revalidatePath('/historial/[id]');
 
     return {
       success: true,
