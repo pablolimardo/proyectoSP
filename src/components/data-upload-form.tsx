@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { recordSchema, type RecordSchema } from '@/lib/types';
-import { saveRecord } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import {
   Form,
@@ -25,6 +24,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase-client';
 
 const statusOptions = ["Marcha", "Detenido", "Lavado", "Purgado", "Local", "Remoto", "Fuera de Servicio"];
 
@@ -65,11 +66,16 @@ export function DataUploadForm() {
   }, [form]);
 
   async function onSubmit(data: RecordSchema) {
-    const result = await saveRecord(data);
-    if (result.success) {
+    try {
+      const newRecord = {
+        ...data,
+        timestamp: Timestamp.fromDate(new Date()),
+      };
+      await addDoc(collection(db, "registros_planta"), newRecord);
+      
       toast({
         title: 'Éxito',
-        description: result.message,
+        description: 'Datos guardados correctamente.',
       });
       form.reset(defaultValues);
       const now = new Date();
@@ -77,10 +83,11 @@ export function DataUploadForm() {
       const time = now.toTimeString().split(' ')[0].substring(0, 5);
       form.setValue('fecha', date);
       form.setValue('hora', time);
-    } else {
+    } catch (error) {
+      console.error('Error saving record to Firestore:', error);
       toast({
         title: 'Error',
-        description: result.message,
+        description: 'Ocurrió un error al guardar los datos.',
         variant: 'destructive',
       });
     }

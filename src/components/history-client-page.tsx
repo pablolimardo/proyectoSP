@@ -1,12 +1,20 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Calendar as CalendarIcon, Loader2 } from 'lucide-react';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  Timestamp,
+} from 'firebase/firestore';
 
-import { getRecords } from '@/lib/actions';
+import { db } from '@/lib/firebase-client';
 import type { PlantRecord } from '@/lib/types';
 import {
   Table,
@@ -22,17 +30,47 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
+async function fetchRecords(filterDate?: Date): Promise<PlantRecord[]> {
+  let q = query(collection(db, 'registros_planta'), orderBy('timestamp', 'desc'));
+
+  if (filterDate) {
+    const startOfDay = new Date(filterDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(filterDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    q = query(
+      collection(db, 'registros_planta'),
+      orderBy('timestamp', 'desc'),
+      where('timestamp', '>=', Timestamp.fromDate(startOfDay)),
+      where('timestamp', '<=', Timestamp.fromDate(endOfDay))
+    );
+  }
+
+  const querySnapshot = await getDocs(q);
+  const records: PlantRecord[] = [];
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    records.push({
+      id: doc.id,
+      ...data,
+      timestamp: (data.timestamp as Timestamp).toDate(),
+    } as PlantRecord);
+  });
+  return records;
+}
+
 export function HistoryClientPage() {
   const [records, setRecords] = useState<PlantRecord[]>([]);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    startTransition(async () => {
-      const data = await getRecords(date);
-      setRecords(data);
-    });
+    setIsLoading(true);
+    fetchRecords(date)
+      .then(setRecords)
+      .finally(() => setIsLoading(false));
   }, [date]);
 
   const handleRowClick = (id: string) => {
@@ -83,7 +121,7 @@ export function HistoryClientPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isPending ? (
+            {isLoading ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-24 text-center">
                   <div className="flex justify-center items-center">
