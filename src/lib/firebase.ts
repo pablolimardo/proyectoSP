@@ -1,5 +1,6 @@
 import admin from 'firebase-admin';
 
+// This is a singleton to ensure we only initialize the app once.
 if (!admin.apps.length) {
   try {
     admin.initializeApp({
