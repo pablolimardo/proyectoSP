@@ -55,7 +55,8 @@ export function DataUploadForm() {
       }
     });
     return () => subscription.unsubscribe();
-  }, [form, setFormData, formData]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, setFormData]);
 
 
   async function onSubmit(data: RecordSchema) {
@@ -228,18 +229,6 @@ export function DataUploadForm() {
         </section>
 
         <Separator />
-          
-        <section className="space-y-4">
-            <SectionTitle>Módulo EBAP</SectionTitle>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
-                {renderSelectInput('ebap.b1', 'B1')}
-                {renderSelectInput('ebap.b2', 'B2')}
-                {renderSelectInput('ebap.b3', 'B3')}
-                {renderSelectInput('ebap.b4', 'B4')}
-            </div>
-        </section>
-
-        <Separator />
 
         <section className="space-y-4">
             <SectionTitle>Módulo EBAC</SectionTitle>
@@ -248,6 +237,18 @@ export function DataUploadForm() {
                 {renderSelectInput('ebac.b2', 'B2')}
                 {renderSelectInput('ebac.b3', 'B3')}
                 {renderSelectInput('ebac.b4', 'B4')}
+            </div>
+        </section>
+          
+        <Separator />
+
+        <section className="space-y-4">
+            <SectionTitle>Módulo EBAP</SectionTitle>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
+                {renderSelectInput('ebap.b1', 'B1')}
+                {renderSelectInput('ebap.b2', 'B2')}
+                {renderSelectInput('ebap.b3', 'B3')}
+                {renderSelectInput('ebap.b4', 'B4')}
             </div>
         </section>
 

@@ -1,3 +1,4 @@
+
 'use server';
 import { getRecordById } from '@/lib/actions';
 import { notFound } from 'next/navigation';
@@ -104,18 +105,18 @@ export default async function RecordDetailPage({ params }: DetailPageProps) {
                 <p className="text-base text-muted-foreground">{record.observaciones || 'Sin observaciones.'}</p>
             </CardContent>
         </Card>
-
-        <Card>
-            <CardHeader><CardTitle>Módulo EBAP</CardTitle></CardHeader>
-            <CardContent className="grid grid-cols-2 gap-4">
-                {Object.entries(record.ebap).map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
-            </CardContent>
-        </Card>
-
+        
         <Card>
             <CardHeader><CardTitle>Módulo EBAC</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
                 {Object.entries(record.ebac).map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
+            </CardContent>
+        </Card>
+        
+        <Card>
+            <CardHeader><CardTitle>Módulo EBAP</CardTitle></CardHeader>
+            <CardContent className="grid grid-cols-2 gap-4">
+                {Object.entries(record.ebap).map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
             </CardContent>
         </Card>
 
