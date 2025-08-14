@@ -24,9 +24,9 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
-      <div className="container mx-auto flex h-16 items-center px-4 md:px-6">
+      <div className="container mx-auto flex h-20 items-center px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 mr-6">
-          <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={40} height={40} />
+          <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={60} height={60} />
           <span className="text-xl font-bold font-headline text-primary whitespace-nowrap">
             SPSE Laboratorio
           </span>
@@ -68,7 +68,7 @@ export function Header() {
             <SheetContent side="left">
               <div className="flex flex-col gap-6 p-6">
                 <Link href="/" className="flex items-center gap-2">
-                  <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={40} height={40} />
+                  <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={60} height={60} />
                   <span className="text-xl font-bold font-headline text-primary">
                     SPSE Laboratorio
                   </span>
