@@ -70,13 +70,6 @@ export function DataUploadForm() {
     form.reset(formData);
   }, [formData, form]);
 
-  useEffect(() => {
-    const subscription = form.watch((value) => {
-      setFormData(value as RecordSchema);
-    });
-    return () => subscription.unsubscribe();
-  }, [form, setFormData]);
-
 
   async function onSubmit(data: RecordSchema) {
     try {
@@ -117,8 +110,9 @@ export function DataUploadForm() {
                 value={isNaN(field.value) ? '' : field.value}
                 onChange={e => {
                   const value = e.target.value;
-                  // Allow empty string to clear the field, parse to number otherwise
-                  field.onChange(value === '' ? NaN : parseFloat(value));
+                  const parsedValue = parseFloat(value);
+                  field.onChange(value === '' ? NaN : parsedValue);
+                  setFormData(prev => ({...prev, [name]: parsedValue}));
                 }}
                 className={readOnly ? "bg-muted/50" : ""}
             />
@@ -136,7 +130,18 @@ export function DataUploadForm() {
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+          <Select 
+            onValueChange={(value) => {
+                field.onChange(value);
+                const keys = name.split('.');
+                if (keys.length === 2) {
+                    setFormData(prev => ({ ...prev, [keys[0]]: { ...prev[keys[0]], [keys[1]]: value } }));
+                } else {
+                    setFormData(prev => ({ ...prev, [name]: value }));
+                }
+            }} 
+            value={field.value}
+            >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Seleccionar..." />
@@ -169,7 +174,7 @@ export function DataUploadForm() {
                     <FormItem>
                       <FormLabel>Fecha</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input type="date" {...field} onChange={(e) => { field.onChange(e); setFormData(prev => ({...prev, fecha: e.target.value})) }}/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -182,7 +187,7 @@ export function DataUploadForm() {
                     <FormItem>
                       <FormLabel>Hora</FormLabel>
                       <FormControl>
-                        <Input type="time" {...field} />
+                        <Input type="time" {...field} onChange={(e) => { field.onChange(e); setFormData(prev => ({...prev, hora: e.target.value})) }}/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -195,7 +200,7 @@ export function DataUploadForm() {
                     <FormItem>
                       <FormLabel>Nombre del Operador</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ej: Juan Pérez" {...field} />
+                        <Input placeholder="Ej: Juan Pérez" {...field} onChange={(e) => { field.onChange(e); setFormData(prev => ({...prev, nombreOperador: e.target.value})) }}/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -309,7 +314,7 @@ export function DataUploadForm() {
                   <FormItem>
                     <FormLabel>Anotaciones generales</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Sin novedades..." {...field} rows={4} />
+                      <Textarea placeholder="Sin novedades..." {...field} rows={4} onChange={(e) => { field.onChange(e); setFormData(prev => ({...prev, observaciones: e.target.value})) }}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
