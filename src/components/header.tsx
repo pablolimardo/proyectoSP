@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { CircleUser, Menu, Droplets } from 'lucide-react';
+import { CircleUser, Menu } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const navItems = [
   { href: '/', label: 'Cargar Datos' },
@@ -25,9 +26,9 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <Droplets className="h-6 w-6 text-primary" />
+          <Image src="/logo.png" alt="SPSE Laboratorio Logo" width={40} height={40} />
           <span className="text-xl font-bold font-headline text-primary">
-            WaterPlant Pro
+            SPSE Laboratorio
           </span>
         </Link>
 
@@ -66,9 +67,9 @@ export function Header() {
           <SheetContent side="left">
             <div className="flex flex-col gap-6 p-6">
               <Link href="/" className="flex items-center gap-2">
-                <Droplets className="h-6 w-6 text-primary" />
+                <Image src="/logo.png" alt="SPSE Laboratorio Logo" width={40} height={40} />
                 <span className="text-xl font-bold font-headline text-primary">
-                  WaterPlant Pro
+                  SPSE Laboratorio
                 </span>
               </Link>
               <nav className="grid gap-4">
