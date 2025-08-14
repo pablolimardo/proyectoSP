@@ -119,9 +119,9 @@ export default async function RecordDetailPage({ params }: DetailPageProps) {
             </CardContent>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-3">
             <CardHeader><CardTitle>Módulo Filtros</CardTitle></CardHeader>
-            <CardContent className="grid grid-cols-2 gap-4">
+            <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {Object.entries(record.filtros).map(([key, value]) => <StatusItem key={key} label={`Filtro ${key.substring(1)}`} value={value as string} />)}
             </CardContent>
         </Card>

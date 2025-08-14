@@ -19,7 +19,7 @@ const defaultValues: RecordSchema = {
   soda: { ml_min: NaN, ppm: NaN },
   ebap: { b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
   ebac: { b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
-  filtros: { f1: "Marcha", f2: "Marcha", f3: "Marcha", f4: "Marcha" },
+  filtros: { f1: "Marcha", f2: "Marcha", f3: "Marcha", f4: "Marcha", f5: "Marcha", f6: "Marcha", f7: "Marcha", f8: "Marcha" },
   observaciones: '',
 };
 

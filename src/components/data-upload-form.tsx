@@ -40,21 +40,22 @@ export function DataUploadForm() {
     defaultValues: formData,
   });
 
-  const { isSubmitting, isDirty } = form.formState;
+  const { isSubmitting } = form.formState;
 
   useEffect(() => {
     form.reset(formData);
   }, [formData, form]);
 
-  // This effect will sync the form state to the context when the user stops typing.
   useEffect(() => {
-    if (isDirty) {
-      const subscription = form.watch((value) => {
-        setFormData(value as RecordSchema);
-      });
-      return () => subscription.unsubscribe();
-    }
-  }, [form, setFormData, isDirty]);
+    const subscription = form.watch((value) => {
+      // Only call setFormData if the data is actually different.
+      // This is a simple deep-ish compare, might need improvement for complex cases.
+      if (JSON.stringify(value) !== JSON.stringify(formData)) {
+          setFormData(value as RecordSchema);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form, setFormData, formData]);
 
 
   async function onSubmit(data: RecordSchema) {
@@ -252,13 +253,25 @@ export function DataUploadForm() {
 
         <Separator />
 
-        <section className="space-y-4">
+        <section className="space-y-6">
             <SectionTitle>Módulo Filtros</SectionTitle>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
-                {renderSelectInput('filtros.f1', 'Filtro 1')}
-                {renderSelectInput('filtros.f2', 'Filtro 2')}
-                {renderSelectInput('filtros.f3', 'Filtro 3')}
-                {renderSelectInput('filtros.f4', 'Filtro 4')}
+            <div className="space-y-4 p-4 border rounded-lg">
+                <h3 className="text-lg font-semibold font-headline mb-2">Módulo A</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {renderSelectInput('filtros.f1', 'Filtro 1')}
+                    {renderSelectInput('filtros.f2', 'Filtro 2')}
+                    {renderSelectInput('filtros.f3', 'Filtro 3')}
+                    {renderSelectInput('filtros.f4', 'Filtro 4')}
+                </div>
+            </div>
+             <div className="space-y-4 p-4 border rounded-lg">
+                <h3 className="text-lg font-semibold font-headline mb-2">Módulo B</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {renderSelectInput('filtros.f5', 'Filtro 5')}
+                    {renderSelectInput('filtros.f6', 'Filtro 6')}
+                    {renderSelectInput('filtros.f7', 'Filtro 7')}
+                    {renderSelectInput('filtros.f8', 'Filtro 8')}
+                </div>
             </div>
         </section>
           
