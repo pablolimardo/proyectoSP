@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect } from 'react';
@@ -5,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { recordSchema, type RecordSchema } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { useFormContext_NUCLEAR } from '@/context/form-context';
 import {
   Form,
   FormControl,
@@ -24,25 +26,6 @@ import { Separator } from './ui/separator';
 
 const statusOptions = ["Marcha", "Detenido", "Lavado", "Purgado", "Local", "Remoto", "Fuera de Servicio"];
 
-const defaultValues: RecordSchema = {
-  fecha: '',
-  hora: '',
-  nombreOperador: '',
-  caudal: NaN,
-  turbidezAguaCruda: NaN,
-  phAguaCruda: NaN,
-  temperatura: NaN,
-  turbidezAguaClarificada: NaN,
-  phAguaClarificada: NaN,
-  cloro: NaN,
-  pac: { ml_min: NaN, ppm: NaN },
-  soda: { ml_min: NaN, ppm: NaN },
-  ebap: { b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
-  ebac: { b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
-  filtros: { f1: "Marcha", f2: "Marcha", f3: "Marcha", f4: "Marcha" },
-  observaciones: '',
-};
-
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <h2 className="text-xl font-headline font-semibold text-primary">{children}</h2>
 );
@@ -50,20 +33,25 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 
 export function DataUploadForm() {
   const { toast } = useToast();
+  const { formData, setFormData, resetForm } = useFormContext_NUCLEAR();
+  
   const form = useForm<RecordSchema>({
     resolver: zodResolver(recordSchema),
-    defaultValues,
+    defaultValues: formData,
   });
 
   const { isSubmitting } = form.formState;
 
   useEffect(() => {
-    const now = new Date();
-    const date = now.toISOString().split('T')[0];
-    const time = now.toTimeString().split(' ')[0].substring(0, 5);
-    form.setValue('fecha', date);
-    form.setValue('hora', time);
-  }, [form]);
+    form.reset(formData);
+  }, [formData, form]);
+
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+        setFormData(value as RecordSchema);
+    });
+    return () => subscription.unsubscribe();
+  }, [form, setFormData]);
 
   async function onSubmit(data: RecordSchema) {
     try {
@@ -77,12 +65,7 @@ export function DataUploadForm() {
         title: 'Éxito',
         description: 'Datos guardados correctamente.',
       });
-      form.reset(defaultValues);
-      const now = new Date();
-      const date = now.toISOString().split('T')[0];
-      const time = now.toTimeString().split(' ')[0].substring(0, 5);
-      form.setValue('fecha', date);
-      form.setValue('hora', time);
+      resetForm();
     } catch (error) {
       console.error('Error saving record to Firestore:', error);
       toast({
@@ -126,7 +109,7 @@ export function DataUploadForm() {
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Seleccionar..." />
