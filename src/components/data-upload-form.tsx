@@ -13,12 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -26,6 +20,7 @@ import { Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase-client';
+import { Separator } from './ui/separator';
 
 const statusOptions = ["Marcha", "Detenido", "Lavado", "Purgado", "Local", "Remoto", "Fuera de Servicio"];
 
@@ -48,6 +43,11 @@ const defaultValues: RecordSchema = {
   observaciones: '',
 };
 
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="text-xl font-headline font-semibold text-primary">{children}</h2>
+);
+
+
 export function DataUploadForm() {
   const { toast } = useToast();
   const form = useForm<RecordSchema>({
@@ -69,7 +69,7 @@ export function DataUploadForm() {
     try {
       const newRecord = {
         ...data,
-        timestamp: Timestamp.fromDate(new Date()),
+        timestamp: Timestamp.fromDate(new Date(`${data.fecha}T${data.hora}`)),
       };
       await addDoc(collection(db, "registros_planta"), newRecord);
       
@@ -106,7 +106,11 @@ export function DataUploadForm() {
                 inputMode="decimal" 
                 {...field} 
                 value={isNaN(field.value) ? '' : field.value}
-                onChange={e => field.onChange(e.target.value === '' ? NaN : parseFloat(e.target.value))}
+                onChange={e => {
+                  const value = e.target.value;
+                  // Allow empty string to clear the field, parse to number otherwise
+                  field.onChange(value === '' ? NaN : parseFloat(value));
+                }}
             />
           </FormControl>
           <FormMessage />
@@ -144,11 +148,10 @@ export function DataUploadForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Accordion type="multiple" defaultValue={['item-1', 'item-2', 'item-agua-caf', 'item-pac-soda']} className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="text-xl font-headline">Datos Generales</AccordionTrigger>
-            <AccordionContent className="p-2">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <section className="space-y-4">
+            <SectionTitle>Datos Generales</SectionTitle>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg">
                 <FormField
                   control={form.control}
                   name="fecha"
@@ -188,37 +191,37 @@ export function DataUploadForm() {
                     </FormItem>
                   )}
                 />
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-2">
-            <AccordionTrigger className="text-xl font-headline">Agua Cruda</AccordionTrigger>
-            <AccordionContent className="p-2 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {renderNumericInput('caudal', 'Caudal')}
-                    {renderNumericInput('turbidezAguaCruda', 'Turbidez')}
-                    {renderNumericInput('phAguaCruda', 'PH')}
-                    {renderNumericInput('temperatura', 'Temperatura en C°')}
-                </div>
-            </AccordionContent>
-          </AccordionItem>
+            </div>
+        </section>
 
-          <AccordionItem value="item-agua-caf">
-            <AccordionTrigger className="text-xl font-headline">Agua CAF</AccordionTrigger>
-            <AccordionContent className="p-2 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {renderNumericInput('turbidezAguaClarificada', 'Turbidez')}
-                    {renderNumericInput('phAguaClarificada', 'PH')}
-                    {renderNumericInput('cloro', 'Cloro')}
-                </div>
-            </AccordionContent>
-          </AccordionItem>
+        <Separator />
+        
+        <section className="space-y-4">
+            <SectionTitle>Agua Cruda</SectionTitle>
+             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg">
+                {renderNumericInput('caudal', 'Caudal')}
+                {renderNumericInput('turbidezAguaCruda', 'Turbidez')}
+                {renderNumericInput('phAguaCruda', 'PH')}
+                {renderNumericInput('temperatura', 'Temperatura en C°')}
+            </div>
+        </section>
 
-          <AccordionItem value="item-pac-soda">
-            <AccordionTrigger className="text-xl font-headline">PAC y SODA</AccordionTrigger>
-            <AccordionContent className="p-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Separator />
+
+        <section className="space-y-4">
+            <SectionTitle>Agua CAF</SectionTitle>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg">
+                {renderNumericInput('turbidezAguaClarificada', 'Turbidez')}
+                {renderNumericInput('phAguaClarificada', 'PH')}
+                {renderNumericInput('cloro', 'Cloro')}
+            </div>
+        </section>
+        
+        <Separator />
+
+        <section className="space-y-4">
+            <SectionTitle>PAC y SODA</SectionTitle>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 border rounded-lg">
                 <div>
                   <h3 className="text-lg font-semibold font-headline mb-4">PAC</h3>
                   <div className="space-y-4">
@@ -234,50 +237,51 @@ export function DataUploadForm() {
                   </div>
                 </div>
               </div>
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="item-3">
-            <AccordionTrigger className="text-xl font-headline">Módulo EBAP</AccordionTrigger>
-            <AccordionContent className="p-2">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    {renderNumericInput('ebap.hs', 'HS')}
-                    {renderSelectInput('ebap.b1', 'B1')}
-                    {renderSelectInput('ebap.b2', 'B2')}
-                    {renderSelectInput('ebap.b3', 'B3')}
-                    {renderSelectInput('ebap.b4', 'B4')}
-                </div>
-            </AccordionContent>
-          </AccordionItem>
+        </section>
 
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="text-xl font-headline">Módulo EBAC</AccordionTrigger>
-            <AccordionContent className="p-2">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    {renderNumericInput('ebac.hs', 'HS')}
-                    {renderSelectInput('ebac.b1', 'B1')}
-                    {renderSelectInput('ebac.b2', 'B2')}
-                    {renderSelectInput('ebac.b3', 'B3')}
-                    {renderSelectInput('ebac.b4', 'B4')}
-                </div>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="item-5">
-            <AccordionTrigger className="text-xl font-headline">Módulo Filtros</AccordionTrigger>
-            <AccordionContent className="p-2">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {renderSelectInput('filtros.f1', 'Filtro 1')}
-                    {renderSelectInput('filtros.f2', 'Filtro 2')}
-                    {renderSelectInput('filtros.f3', 'Filtro 3')}
-                    {renderSelectInput('filtros.f4', 'Filtro 4')}
-                </div>
-            </AccordionContent>
-          </AccordionItem>
+        <Separator />
           
-          <AccordionItem value="item-6">
-            <AccordionTrigger className="text-xl font-headline">Observaciones</AccordionTrigger>
-            <AccordionContent className="p-2">
+        <section className="space-y-4">
+            <SectionTitle>Módulo EBAP</SectionTitle>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-4 border rounded-lg">
+                {renderNumericInput('ebap.hs', 'HS')}
+                {renderSelectInput('ebap.b1', 'B1')}
+                {renderSelectInput('ebap.b2', 'B2')}
+                {renderSelectInput('ebap.b3', 'B3')}
+                {renderSelectInput('ebap.b4', 'B4')}
+            </div>
+        </section>
+
+        <Separator />
+
+        <section className="space-y-4">
+            <SectionTitle>Módulo EBAC</SectionTitle>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-4 border rounded-lg">
+                {renderNumericInput('ebac.hs', 'HS')}
+                {renderSelectInput('ebac.b1', 'B1')}
+                {renderSelectInput('ebac.b2', 'B2')}
+                {renderSelectInput('ebac.b3', 'B3')}
+                {renderSelectInput('ebac.b4', 'B4')}
+            </div>
+        </section>
+
+        <Separator />
+
+        <section className="space-y-4">
+            <SectionTitle>Módulo Filtros</SectionTitle>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
+                {renderSelectInput('filtros.f1', 'Filtro 1')}
+                {renderSelectInput('filtros.f2', 'Filtro 2')}
+                {renderSelectInput('filtros.f3', 'Filtro 3')}
+                {renderSelectInput('filtros.f4', 'Filtro 4')}
+            </div>
+        </section>
+          
+        <Separator />
+
+        <section className="space-y-4">
+            <SectionTitle>Observaciones</SectionTitle>
+            <div className="p-4 border rounded-lg">
               <FormField
                 control={form.control}
                 name="observaciones"
@@ -291,12 +295,11 @@ export function DataUploadForm() {
                   </FormItem>
                 )}
               />
-            </AccordionContent>
-          </AccordionItem>
+            </div>
+        </section>
 
-        </Accordion>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end pt-4">
           <Button type="submit" size="lg" className="w-full md:w-auto bg-accent text-accent-foreground hover:bg-accent/90" disabled={isSubmitting}>
              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Guardar Datos
