@@ -28,7 +28,7 @@ export function Header() {
         <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={80} height={80} />
-            <span className="text-xl font-bold font-headline text-primary whitespace-nowrap">
+            <span className="text-xl font-bold font-headline text-primary">
                 SPSE Laboratorio
             </span>
             </Link>
