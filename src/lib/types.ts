@@ -18,11 +18,11 @@ export const recordSchema = z.object({
   cloro: z.coerce.number(),
   pac: z.object({
     ml_min: z.coerce.number(),
-    ppm: z.coerce.number(),
+    ppm: z.coerce.number().optional(),
   }),
   soda: z.object({
     ml_min: z.coerce.number(),
-    ppm: z.coerce.number(),
+    ppm: z.coerce.number().optional(),
   }),
 
   ebap: z.object({
@@ -59,3 +59,5 @@ export interface PlantRecord extends RecordSchema {
   id: string;
   timestamp: Date;
 }
+
+    

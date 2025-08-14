@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { recordSchema, type RecordSchema } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -40,7 +40,31 @@ export function DataUploadForm() {
     defaultValues: formData,
   });
 
+  const { control, setValue } = form;
   const { isSubmitting } = form.formState;
+
+  const caudal = useWatch({ control, name: 'caudal' });
+  const pacMlMin = useWatch({ control, name: 'pac.ml_min' });
+  const sodaMlMin = useWatch({ control, name: 'soda.ml_min' });
+
+  useEffect(() => {
+    if (!isNaN(caudal) && caudal > 0 && !isNaN(pacMlMin)) {
+      const pacPpm = (pacMlMin * 1.26 * 60) / caudal;
+      setValue('pac.ppm', parseFloat(pacPpm.toFixed(2)));
+    } else {
+        setValue('pac.ppm', NaN)
+    }
+  }, [caudal, pacMlMin, setValue]);
+
+  useEffect(() => {
+    if (!isNaN(caudal) && caudal > 0 && !isNaN(sodaMlMin)) {
+      const sodaPpm = (sodaMlMin * 0.05 * 60) / caudal;
+      setValue('soda.ppm', parseFloat(sodaPpm.toFixed(2)));
+    } else {
+        setValue('soda.ppm', NaN)
+    }
+  }, [caudal, sodaMlMin, setValue]);
+
 
   useEffect(() => {
     form.reset(formData);
@@ -48,14 +72,9 @@ export function DataUploadForm() {
 
   useEffect(() => {
     const subscription = form.watch((value) => {
-      // Only call setFormData if the data is actually different.
-      // This is a simple deep-ish compare, might need improvement for complex cases.
-      if (JSON.stringify(value) !== JSON.stringify(formData)) {
-          setFormData(value as RecordSchema);
-      }
+      setFormData(value as RecordSchema);
     });
     return () => subscription.unsubscribe();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, setFormData]);
 
 
@@ -82,7 +101,7 @@ export function DataUploadForm() {
     }
   }
 
-  const renderNumericInput = (name: any, label: string) => (
+  const renderNumericInput = (name: any, label: string, readOnly = false) => (
     <FormField
       control={form.control}
       name={name}
@@ -92,7 +111,8 @@ export function DataUploadForm() {
           <FormControl>
             <Input 
                 type="text" 
-                inputMode="decimal" 
+                inputMode="decimal"
+                readOnly={readOnly}
                 {...field} 
                 value={isNaN(field.value) ? '' : field.value}
                 onChange={e => {
@@ -100,6 +120,7 @@ export function DataUploadForm() {
                   // Allow empty string to clear the field, parse to number otherwise
                   field.onChange(value === '' ? NaN : parseFloat(value));
                 }}
+                className={readOnly ? "bg-muted/50" : ""}
             />
           </FormControl>
           <FormMessage />
@@ -215,14 +236,14 @@ export function DataUploadForm() {
                   <h3 className="text-lg font-semibold font-headline mb-4">PAC</h3>
                   <div className="space-y-4">
                     {renderNumericInput('pac.ml_min', 'ml/min')}
-                    {renderNumericInput('pac.ppm', 'ppm')}
+                    {renderNumericInput('pac.ppm', 'ppm (calculado)', true)}
                   </div>
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold font-headline mb-4">SODA</h3>
                   <div className="space-y-4">
                     {renderNumericInput('soda.ml_min', 'ml/min')}
-                    {renderNumericInput('soda.ppm', 'ppm')}
+                    {renderNumericInput('soda.ppm', 'ppm (calculado)', true)}
                   </div>
                 </div>
               </div>
@@ -239,9 +260,9 @@ export function DataUploadForm() {
                 {renderSelectInput('ebac.b4', 'B4')}
             </div>
         </section>
-          
-        <Separator />
 
+        <Separator />
+          
         <section className="space-y-4">
             <SectionTitle>Módulo EBAP</SectionTitle>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
@@ -308,3 +329,5 @@ export function DataUploadForm() {
     </Form>
   );
 }
+
+    
