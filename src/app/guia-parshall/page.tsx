@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import Image from 'next/image';
 
 const caudalData = [
   { altura: '3,0', caudal: '18,8' }, { altura: '24,5', caudal: '438,9' },
@@ -63,20 +62,7 @@ export default function GuiaParshallPage() {
             Referencia rápida para la conversión de altura (cm) a caudal (m³/h).
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <section className="flex justify-center">
-             <div className="w-full max-w-2xl rounded-lg overflow-hidden border shadow-md">
-                <Image
-                    src="https://placehold.co/800x400.png"
-                    alt="Medidor Parshall"
-                    width={800}
-                    height={400}
-                    className="object-cover w-full h-auto"
-                    data-ai-hint="parshall flume"
-                />
-            </div>
-          </section>
-          
+        <CardContent>
           <section>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
               <Table>
