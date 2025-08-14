@@ -26,7 +26,6 @@ export const recordSchema = z.object({
   }),
 
   ebap: z.object({
-    hs: z.coerce.number(),
     b1: statusEnum,
     b2: statusEnum,
     b3: statusEnum,
@@ -34,7 +33,6 @@ export const recordSchema = z.object({
   }),
 
   ebac: z.object({
-    hs: z.coerce.number(),
     b1: statusEnum,
     b2: statusEnum,
     b3: statusEnum,

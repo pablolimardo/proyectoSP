@@ -37,8 +37,8 @@ const defaultValues: RecordSchema = {
   cloro: NaN,
   pac: { ml_min: NaN, ppm: NaN },
   soda: { ml_min: NaN, ppm: NaN },
-  ebap: { hs: NaN, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
-  ebac: { hs: NaN, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
+  ebap: { b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
+  ebac: { b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
   filtros: { f1: "Marcha", f2: "Marcha", f3: "Marcha", f4: "Marcha" },
   observaciones: '',
 };
@@ -243,8 +243,7 @@ export function DataUploadForm() {
           
         <section className="space-y-4">
             <SectionTitle>Módulo EBAP</SectionTitle>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-4 border rounded-lg">
-                {renderNumericInput('ebap.hs', 'HS')}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
                 {renderSelectInput('ebap.b1', 'B1')}
                 {renderSelectInput('ebap.b2', 'B2')}
                 {renderSelectInput('ebap.b3', 'B3')}
@@ -256,8 +255,7 @@ export function DataUploadForm() {
 
         <section className="space-y-4">
             <SectionTitle>Módulo EBAC</SectionTitle>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-4 border rounded-lg">
-                {renderNumericInput('ebac.hs', 'HS')}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
                 {renderSelectInput('ebac.b1', 'B1')}
                 {renderSelectInput('ebac.b2', 'B2')}
                 {renderSelectInput('ebac.b3', 'B3')}
