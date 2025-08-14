@@ -40,18 +40,22 @@ export function DataUploadForm() {
     defaultValues: formData,
   });
 
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isDirty } = form.formState;
 
   useEffect(() => {
     form.reset(formData);
   }, [formData, form]);
 
+  // This effect will sync the form state to the context when the user stops typing.
   useEffect(() => {
-    const subscription = form.watch((value) => {
+    if (isDirty) {
+      const subscription = form.watch((value) => {
         setFormData(value as RecordSchema);
-    });
-    return () => subscription.unsubscribe();
-  }, [form, setFormData]);
+      });
+      return () => subscription.unsubscribe();
+    }
+  }, [form, setFormData, isDirty]);
+
 
   async function onSubmit(data: RecordSchema) {
     try {
