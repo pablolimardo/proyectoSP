@@ -24,7 +24,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
-      <div className="container mx-auto flex h-24 items-center px-4 md:px-6">
+      <div className="flex h-24 items-center px-4 md:px-6">
         <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={80} height={80} />
