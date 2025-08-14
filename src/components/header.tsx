@@ -24,10 +24,10 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="SPSE Laboratorio Logo" width={40} height={40} />
-          <span className="text-xl font-bold font-headline text-primary">
+      <div className="container mx-auto flex h-16 items-center px-4 md:px-6">
+        <Link href="/" className="flex items-center gap-2 mr-6">
+          <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={40} height={40} />
+          <span className="text-xl font-bold font-headline text-primary whitespace-nowrap">
             SPSE Laboratorio
           </span>
         </Link>
@@ -49,7 +49,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3 ml-auto">
           <CircleUser className="h-8 w-8 text-muted-foreground" />
           <div className="flex flex-col">
             <span className="font-semibold text-sm">Operador</span>
@@ -57,48 +57,50 @@ export function Header() {
           </div>
         </div>
 
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="md:hidden">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Toggle navigation menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left">
-            <div className="flex flex-col gap-6 p-6">
-              <Link href="/" className="flex items-center gap-2">
-                <Image src="/logo.png" alt="SPSE Laboratorio Logo" width={40} height={40} />
-                <span className="text-xl font-bold font-headline text-primary">
-                  SPSE Laboratorio
-                </span>
-              </Link>
-              <nav className="grid gap-4">
-                {navItems.map((item) => (
-                  <SheetClose asChild key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        'text-lg font-medium transition-colors hover:text-primary',
-                        pathname === item.href
-                          ? 'text-primary'
-                          : 'text-muted-foreground'
-                      )}
-                    >
-                      {item.label}
-                    </Link>
-                  </SheetClose>
-                ))}
-              </nav>
-              <div className="mt-auto flex items-center gap-3 border-t pt-4">
-                 <CircleUser className="h-8 w-8 text-muted-foreground" />
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-sm">Operador</span>
-                    <span className="text-xs text-muted-foreground">En turno</span>
-                  </div>
+        <div className="md:hidden ml-auto">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <div className="flex flex-col gap-6 p-6">
+                <Link href="/" className="flex items-center gap-2">
+                  <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={40} height={40} />
+                  <span className="text-xl font-bold font-headline text-primary">
+                    SPSE Laboratorio
+                  </span>
+                </Link>
+                <nav className="grid gap-4">
+                  {navItems.map((item) => (
+                    <SheetClose asChild key={item.href}>
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          'text-lg font-medium transition-colors hover:text-primary',
+                          pathname === item.href
+                            ? 'text-primary'
+                            : 'text-muted-foreground'
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    </SheetClose>
+                  ))}
+                </nav>
+                <div className="mt-auto flex items-center gap-3 border-t pt-4">
+                   <CircleUser className="h-8 w-8 text-muted-foreground" />
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm">Operador</span>
+                      <span className="text-xs text-muted-foreground">En turno</span>
+                    </div>
+                </div>
               </div>
-            </div>
-          </SheetContent>
-        </Sheet>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );
