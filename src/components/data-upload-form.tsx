@@ -112,7 +112,15 @@ export function DataUploadForm() {
                   const value = e.target.value;
                   const parsedValue = parseFloat(value);
                   field.onChange(value === '' ? NaN : parsedValue);
-                  setFormData(prev => ({...prev, [name]: parsedValue}));
+                  
+                  const keys = name.split('.');
+                  if (keys.length === 2) {
+                    // @ts-ignore
+                    setFormData(prev => ({ ...prev, [keys[0]]: { ...prev[keys[0]], [keys[1]]: parsedValue } }));
+                  } else {
+                    // @ts-ignore
+                    setFormData(prev => ({...prev, [name]: parsedValue}));
+                  }
                 }}
                 className={readOnly ? "bg-muted/50" : ""}
             />
@@ -135,8 +143,10 @@ export function DataUploadForm() {
                 field.onChange(value);
                 const keys = name.split('.');
                 if (keys.length === 2) {
+                  // @ts-ignore
                     setFormData(prev => ({ ...prev, [keys[0]]: { ...prev[keys[0]], [keys[1]]: value } }));
                 } else {
+                  // @ts-ignore
                     setFormData(prev => ({ ...prev, [name]: value }));
                 }
             }} 
