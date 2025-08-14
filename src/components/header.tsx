@@ -25,14 +25,16 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
       <div className="container mx-auto flex h-24 items-center px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2 mr-6">
-          <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={80} height={80} />
-          <span className="text-xl font-bold font-headline text-primary whitespace-nowrap">
-            SPSE Laboratorio
-          </span>
-        </Link>
-
-        <nav className="hidden md:flex gap-6 items-center justify-center flex-1">
+        <div className="flex items-center">
+            <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.jpg" alt="SPSE Laboratorio Logo" width={80} height={80} />
+            <span className="text-xl font-bold font-headline text-primary whitespace-nowrap">
+                SPSE Laboratorio
+            </span>
+            </Link>
+        </div>
+        
+        <nav className="hidden md:flex flex-1 items-center justify-center gap-6">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -49,7 +51,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3 ml-auto">
+        <div className="hidden md:flex items-center gap-3">
           <CircleUser className="h-8 w-8 text-muted-foreground" />
           <div className="flex flex-col">
             <span className="font-semibold text-sm">Operador</span>
