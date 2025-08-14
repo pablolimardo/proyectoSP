@@ -33,17 +33,17 @@ const defaultValues: RecordSchema = {
   fecha: '',
   hora: '',
   nombreOperador: '',
-  caudal: 0,
-  turbidezAguaCruda: 0,
-  phAguaCruda: 0,
-  temperatura: 0,
-  turbidezAguaClarificada: 0,
-  phAguaClarificada: 0,
-  cloro: 0,
-  pac: { ml_min: 0, ppm: 0 },
-  soda: { ml_min: 0, ppm: 0 },
-  ebap: { hs: 0, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
-  ebac: { hs: 0, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
+  caudal: NaN,
+  turbidezAguaCruda: NaN,
+  phAguaCruda: NaN,
+  temperatura: NaN,
+  turbidezAguaClarificada: NaN,
+  phAguaClarificada: NaN,
+  cloro: NaN,
+  pac: { ml_min: NaN, ppm: NaN },
+  soda: { ml_min: NaN, ppm: NaN },
+  ebap: { hs: NaN, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
+  ebac: { hs: NaN, b1: "Marcha", b2: "Marcha", b3: "Marcha", b4: "Marcha" },
   filtros: { f1: "Marcha", f2: "Marcha", f3: "Marcha", f4: "Marcha" },
   observaciones: '',
 };
@@ -101,7 +101,13 @@ export function DataUploadForm() {
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input type="text" inputMode="decimal" {...field} />
+            <Input 
+                type="text" 
+                inputMode="decimal" 
+                {...field} 
+                value={isNaN(field.value) ? '' : field.value}
+                onChange={e => field.onChange(e.target.value === '' ? NaN : parseFloat(e.target.value))}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
