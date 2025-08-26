@@ -107,21 +107,23 @@ export function DataUploadForm() {
                 inputMode="decimal"
                 readOnly={readOnly}
                 {...field} 
-                value={isNaN(field.value) ? '' : field.value}
+                value={field.value === undefined || isNaN(field.value) ? '' : String(field.value)}
                 onChange={e => {
                   const value = e.target.value;
                   const parsedValue = parseFloat(value);
-                  field.onChange(value === '' ? NaN : parsedValue);
+                  const finalValue = value === '' || isNaN(parsedValue) ? NaN : parsedValue;
+
+                  field.onChange(finalValue);
                   
                   const keys = name.split('.');
                   setFormData(prev => {
                     const newFormData = { ...prev };
                     if (keys.length === 2) {
                         // @ts-ignore
-                        newFormData[keys[0]] = { ...newFormData[keys[0]], [keys[1]]: parsedValue };
+                        newFormData[keys[0]] = { ...newFormData[keys[0]], [keys[1]]: finalValue };
                     } else {
                         // @ts-ignore
-                        newFormData[name] = parsedValue;
+                        newFormData[name] = finalValue;
                     }
                     return newFormData;
                   });
@@ -352,5 +354,3 @@ export function DataUploadForm() {
     </Form>
   );
 }
-
-    
