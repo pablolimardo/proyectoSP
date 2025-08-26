@@ -111,20 +111,18 @@ export function DataUploadForm() {
                 onChange={e => {
                   const value = e.target.value;
                   const parsedValue = parseFloat(value);
-                  const finalValue = value === '' || isNaN(parsedValue) ? NaN : parsedValue;
+                  const finalValue = value.endsWith('.') || value === '' || isNaN(parsedValue) ? value : parsedValue;
 
                   field.onChange(finalValue);
                   
                   const keys = name.split('.');
                   setFormData(prev => {
                     const newFormData = { ...prev };
-                    if (keys.length === 2) {
-                        // @ts-ignore
-                        newFormData[keys[0]] = { ...newFormData[keys[0]], [keys[1]]: finalValue };
-                    } else {
-                        // @ts-ignore
-                        newFormData[name] = finalValue;
+                    let current = newFormData as any;
+                    for (let i = 0; i < keys.length - 1; i++) {
+                      current = current[keys[i]] = { ...current[keys[i]] };
                     }
+                    current[keys[keys.length - 1]] = typeof finalValue === 'string' ? parseFloat(finalValue) : finalValue;
                     return newFormData;
                   });
                 }}
@@ -186,7 +184,7 @@ export function DataUploadForm() {
         
         <section className="space-y-4">
             <SectionTitle>Datos Generales</SectionTitle>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
                 <FormField
                   control={form.control}
                   name="fecha"
@@ -213,6 +211,7 @@ export function DataUploadForm() {
                     </FormItem>
                   )}
                 />
+                <div className="md:col-span-2">
                 <FormField
                   control={form.control}
                   name="nombreOperador"
@@ -226,6 +225,7 @@ export function DataUploadForm() {
                     </FormItem>
                   )}
                 />
+                </div>
             </div>
         </section>
 
@@ -233,7 +233,7 @@ export function DataUploadForm() {
         
         <section className="space-y-4">
             <SectionTitle>Agua Cruda</SectionTitle>
-             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
                 {renderNumericInput('caudal', 'Caudal')}
                 {renderNumericInput('turbidezAguaCruda', 'Turbidez')}
                 {renderNumericInput('phAguaCruda', 'PH')}
@@ -245,7 +245,7 @@ export function DataUploadForm() {
 
         <section className="space-y-4">
             <SectionTitle>Agua CAF</SectionTitle>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
                 {renderNumericInput('turbidezAguaClarificada', 'Turbidez')}
                 {renderNumericInput('phAguaClarificada', 'PH')}
                 {renderNumericInput('cloro', 'Cloro')}
@@ -256,45 +256,43 @@ export function DataUploadForm() {
 
         <section className="space-y-4">
             <SectionTitle>PAC y SODA</SectionTitle>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 border rounded-lg">
-                <div>
-                  <h3 className="text-lg font-semibold font-headline mb-4">PAC</h3>
-                  <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 p-4 border rounded-lg">
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold font-headline mb-4 text-center md:text-left">PAC</h3>
                     {renderNumericInput('pac.ml_min', 'ml/min')}
                     {renderNumericInput('pac.ppm', 'ppm (calculado)', true)}
-                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold font-headline mb-4">SODA</h3>
-                  <div className="space-y-4">
-                    {renderNumericInput('soda.ml_min', 'ml/min')}
-                    {renderNumericInput('soda.ppm', 'ppm (calculado)', true)}
-                  </div>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold font-headline mb-4 text-center md:text-left">SODA</h3>
+                  {renderNumericInput('soda.ml_min', 'ml/min')}
+                  {renderNumericInput('soda.ppm', 'ppm (calculado)', true)}
                 </div>
-              </div>
-        </section>
-        
-        <Separator />
-        
-        <section className="space-y-4">
-            <SectionTitle>Módulo EBAC</SectionTitle>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
-                {renderSelectInput('ebac.b1', 'B1')}
-                {renderSelectInput('ebac.b2', 'B2')}
-                {renderSelectInput('ebac.b3', 'B3')}
-                {renderSelectInput('ebac.b4', 'B4')}
             </div>
         </section>
-
+        
         <Separator />
-          
+
         <section className="space-y-4">
-            <SectionTitle>Módulo EBAP</SectionTitle>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
-                {renderSelectInput('ebap.b1', 'B1')}
-                {renderSelectInput('ebap.b2', 'B2')}
-                {renderSelectInput('ebap.b3', 'B3')}
-                {renderSelectInput('ebap.b4', 'B4')}
+            <SectionTitle>Módulos Bombas</SectionTitle>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 border rounded-lg">
+                <div>
+                    <h3 className="text-lg font-semibold font-headline mb-4">Módulo EBAC</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                        {renderSelectInput('ebac.b1', 'B1')}
+                        {renderSelectInput('ebac.b2', 'B2')}
+                        {renderSelectInput('ebac.b3', 'B3')}
+                        {renderSelectInput('ebac.b4', 'B4')}
+                    </div>
+                </div>
+                <div>
+                    <h3 className="text-lg font-semibold font-headline mb-4">Módulo EBAP</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                        {renderSelectInput('ebap.b1', 'B1')}
+                        {renderSelectInput('ebap.b2', 'B2')}
+                        {renderSelectInput('ebap.b3', 'B3')}
+                        {renderSelectInput('ebap.b4', 'B4')}
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -344,7 +342,7 @@ export function DataUploadForm() {
         </section>
 
 
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-center pt-4">
           <Button type="submit" size="lg" className="w-full md:w-auto bg-accent text-accent-foreground hover:bg-accent/90" disabled={isSubmitting}>
              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Guardar Datos
