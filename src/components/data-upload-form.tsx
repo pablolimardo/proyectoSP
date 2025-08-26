@@ -114,13 +114,17 @@ export function DataUploadForm() {
                   field.onChange(value === '' ? NaN : parsedValue);
                   
                   const keys = name.split('.');
-                  if (keys.length === 2) {
-                    // @ts-ignore
-                    setFormData(prev => ({ ...prev, [keys[0]]: { ...prev[keys[0]], [keys[1]]: parsedValue } }));
-                  } else {
-                    // @ts-ignore
-                    setFormData(prev => ({...prev, [name]: parsedValue}));
-                  }
+                  setFormData(prev => {
+                    const newFormData = { ...prev };
+                    if (keys.length === 2) {
+                        // @ts-ignore
+                        newFormData[keys[0]] = { ...newFormData[keys[0]], [keys[1]]: parsedValue };
+                    } else {
+                        // @ts-ignore
+                        newFormData[name] = parsedValue;
+                    }
+                    return newFormData;
+                  });
                 }}
                 className={readOnly ? "bg-muted/50" : ""}
             />
@@ -142,13 +146,17 @@ export function DataUploadForm() {
             onValueChange={(value) => {
                 field.onChange(value);
                 const keys = name.split('.');
-                if (keys.length === 2) {
-                  // @ts-ignore
-                    setFormData(prev => ({ ...prev, [keys[0]]: { ...prev[keys[0]], [keys[1]]: value } }));
-                } else {
-                  // @ts-ignore
-                    setFormData(prev => ({ ...prev, [name]: value }));
-                }
+                 setFormData(prev => {
+                    const newFormData = { ...prev };
+                    if (keys.length === 2) {
+                        // @ts-ignore
+                        newFormData[keys[0]] = { ...newFormData[keys[0]], [keys[1]]: value };
+                    } else {
+                        // @ts-ignore
+                        newFormData[name] = value;
+                    }
+                    return newFormData;
+                  });
             }} 
             value={field.value}
             >
@@ -263,9 +271,9 @@ export function DataUploadForm() {
                 </div>
               </div>
         </section>
-
+        
         <Separator />
-
+        
         <section className="space-y-4">
             <SectionTitle>Módulo EBAC</SectionTitle>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border rounded-lg">
