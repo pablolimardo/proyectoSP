@@ -107,14 +107,14 @@ export default async function RecordDetailPage({ params }: DetailPageProps) {
         </Card>
         
         <Card>
-            <CardHeader><CardTitle>Módulo EBAC</CardTitle></CardHeader>
+            <CardHeader><CardTitle>EBAC</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
                 {Object.entries(record.ebac).map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
             </CardContent>
         </Card>
         
         <Card>
-            <CardHeader><CardTitle>Módulo EBAP</CardTitle></CardHeader>
+            <CardHeader><CardTitle>EBAP</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
                 {Object.entries(record.ebap).map(([key, value]) => <StatusItem key={key} label={key.toUpperCase()} value={value as string} />)}
             </CardContent>

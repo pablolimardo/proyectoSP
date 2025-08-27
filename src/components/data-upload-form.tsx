@@ -107,22 +107,32 @@ export function DataUploadForm() {
                 inputMode="decimal"
                 readOnly={readOnly}
                 {...field} 
-                value={field.value === undefined || isNaN(field.value) ? '' : String(field.value)}
+                value={
+                    field.value === undefined || isNaN(field.value) 
+                    ? '' 
+                    : String(field.value).replace('.', ',')
+                }
                 onChange={e => {
                   const value = e.target.value;
-                  const parsedValue = parseFloat(value);
-                  const finalValue = value.endsWith('.') || value === '' || isNaN(parsedValue) ? value : parsedValue;
-
-                  field.onChange(finalValue);
+                  // Allow comma as decimal separator, remove dots for thousands
+                  const formattedValue = value.replace(/\./g, '').replace(',', '.');
+                  const parsedValue = parseFloat(formattedValue);
                   
+                  // Set value for react-hook-form (as number)
+                  field.onChange(isNaN(parsedValue) ? '' : parsedValue);
+                  
+                  // Set value for our context state (also as number)
                   const keys = name.split('.');
                   setFormData(prev => {
                     const newFormData = { ...prev };
                     let current = newFormData as any;
                     for (let i = 0; i < keys.length - 1; i++) {
-                      current = current[keys[i]] = { ...current[keys[i]] };
+                       if (current[keys[i]] === undefined) {
+                        current[keys[i]] = {};
+                       }
+                      current = current[keys[i]];
                     }
-                    current[keys[keys.length - 1]] = typeof finalValue === 'string' ? parseFloat(finalValue) : finalValue;
+                    current[keys[keys.length - 1]] = isNaN(parsedValue) ? NaN : parsedValue;
                     return newFormData;
                   });
                 }}
@@ -184,34 +194,35 @@ export function DataUploadForm() {
         
         <section className="space-y-4">
             <SectionTitle>Datos Generales</SectionTitle>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
-                <FormField
-                  control={form.control}
-                  name="fecha"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fecha</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} onChange={(e) => { field.onChange(e); setFormData(prev => ({...prev, fecha: e.target.value})) }}/>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="hora"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Hora</FormLabel>
-                      <FormControl>
-                        <Input type="time" {...field} onChange={(e) => { field.onChange(e); setFormData(prev => ({...prev, hora: e.target.value})) }}/>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="md:col-span-2">
+            <div className="space-y-4 p-4 border rounded-lg">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="fecha"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Fecha</FormLabel>
+                          <FormControl>
+                            <Input type="date" {...field} onChange={(e) => { field.onChange(e); setFormData(prev => ({...prev, fecha: e.target.value})) }}/>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="hora"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Hora</FormLabel>
+                          <FormControl>
+                            <Input type="time" {...field} onChange={(e) => { field.onChange(e); setFormData(prev => ({...prev, hora: e.target.value})) }}/>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                </div>
                 <FormField
                   control={form.control}
                   name="nombreOperador"
@@ -225,50 +236,47 @@ export function DataUploadForm() {
                     </FormItem>
                   )}
                 />
+            </div>
+        </section>
+
+        <Separator />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section className="space-y-4">
+                <SectionTitle>Agua Cruda</SectionTitle>
+                 <div className="space-y-4 p-4 border rounded-lg">
+                    {renderNumericInput('caudal', 'Caudal')}
+                    {renderNumericInput('turbidezAguaCruda', 'Turbidez')}
+                    {renderNumericInput('phAguaCruda', 'PH')}
+                    {renderNumericInput('temperatura', 'Temperatura en C°')}
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <Separator />
-        
-        <section className="space-y-4">
-            <SectionTitle>Agua Cruda</SectionTitle>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
-                {renderNumericInput('caudal', 'Caudal')}
-                {renderNumericInput('turbidezAguaCruda', 'Turbidez')}
-                {renderNumericInput('phAguaCruda', 'PH')}
-                {renderNumericInput('temperatura', 'Temperatura en C°')}
-            </div>
-        </section>
+            <section className="space-y-4">
+                <SectionTitle>Agua CAF</SectionTitle>
+                <div className="space-y-4 p-4 border rounded-lg">
+                    {renderNumericInput('turbidezAguaClarificada', 'Turbidez')}
+                    {renderNumericInput('phAguaClarificada', 'PH')}
+                    {renderNumericInput('cloro', 'Cloro')}
+                </div>
+            </section>
 
-        <Separator />
-
-        <section className="space-y-4">
-            <SectionTitle>Agua CAF</SectionTitle>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
-                {renderNumericInput('turbidezAguaClarificada', 'Turbidez')}
-                {renderNumericInput('phAguaClarificada', 'PH')}
-                {renderNumericInput('cloro', 'Cloro')}
-            </div>
-        </section>
-        
-        <Separator />
-
-        <section className="space-y-4">
-            <SectionTitle>PAC y SODA</SectionTitle>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 p-4 border rounded-lg">
-                <div className="space-y-4">
-                    <h3 className="text-lg font-semibold font-headline mb-4 text-center md:text-left">PAC</h3>
+            <section className="space-y-4">
+                <SectionTitle>PAC</SectionTitle>
+                <div className="space-y-4 p-4 border rounded-lg">
                     {renderNumericInput('pac.ml_min', 'ml/min')}
                     {renderNumericInput('pac.ppm', 'ppm (calculado)', true)}
                 </div>
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold font-headline mb-4 text-center md:text-left">SODA</h3>
-                  {renderNumericInput('soda.ml_min', 'ml/min')}
-                  {renderNumericInput('soda.ppm', 'ppm (calculado)', true)}
+            </section>
+            
+            <section className="space-y-4">
+                <SectionTitle>SODA</SectionTitle>
+                <div className="space-y-4 p-4 border rounded-lg">
+                      {renderNumericInput('soda.ml_min', 'ml/min')}
+                      {renderNumericInput('soda.ppm', 'ppm (calculado)', true)}
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
         
         <Separator />
 
@@ -352,3 +360,4 @@ export function DataUploadForm() {
     </Form>
   );
 }
+
