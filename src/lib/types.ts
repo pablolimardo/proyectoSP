@@ -6,22 +6,22 @@ export const recordSchema = z.object({
   fecha: z.string().min(1, 'La fecha es requerida.'),
   hora: z.string().min(1, 'La hora es requerida.'),
   nombreOperador: z.string().min(3, 'El nombre del operador es requerido.'),
-  caudal: z.coerce.number().min(0, 'El caudal debe ser un número positivo.'),
+  caudal: z.coerce.number({invalid_type_error: 'Debe ser un número'}).min(0, 'El caudal debe ser un número positivo.'),
   
-  turbidezAguaCruda: z.coerce.number(),
-  phAguaCruda: z.coerce.number(),
-  temperatura: z.coerce.number(),
+  turbidezAguaCruda: z.coerce.number({invalid_type_error: 'Debe ser un número'}),
+  phAguaCruda: z.coerce.number({invalid_type_error: 'Debe ser un número'}),
+  temperatura: z.coerce.number({invalid_type_error: 'Debe ser un número'}),
   
-  turbidezAguaClarificada: z.coerce.number(),
-  phAguaClarificada: z.coerce.number(),
+  turbidezAguaClarificada: z.coerce.number({invalid_type_error: 'Debe ser un número'}),
+  phAguaClarificada: z.coerce.number({invalid_type_error: 'Debe ser un número'}),
   
-  cloro: z.coerce.number(),
+  cloro: z.coerce.number({invalid_type_error: 'Debe ser un número'}),
   pac: z.object({
-    ml_min: z.coerce.number(),
+    ml_min: z.coerce.number({invalid_type_error: 'Debe ser un número'}),
     ppm: z.coerce.number().optional(),
   }),
   soda: z.object({
-    ml_min: z.coerce.number(),
+    ml_min: z.coerce.number({invalid_type_error: 'Debe ser un número'}),
     ppm: z.coerce.number().optional(),
   }),
 
@@ -59,5 +59,3 @@ export interface PlantRecord extends RecordSchema {
   id: string;
   timestamp: Date;
 }
-
-    

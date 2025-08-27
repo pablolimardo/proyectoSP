@@ -108,20 +108,24 @@ export function DataUploadForm() {
                 readOnly={readOnly}
                 {...field} 
                 value={
-                    field.value === undefined || isNaN(field.value) 
-                    ? '' 
-                    : String(field.value).replace('.', ',')
+                  field.value === undefined || isNaN(field.value) 
+                  ? '' 
+                  : String(field.value).replace('.', ',')
                 }
                 onChange={e => {
                   const value = e.target.value;
-                  // Allow comma as decimal separator, remove dots for thousands
                   const formattedValue = value.replace(/\./g, '').replace(',', '.');
-                  const parsedValue = parseFloat(formattedValue);
                   
-                  // Set value for react-hook-form (as number)
-                  field.onChange(isNaN(parsedValue) ? '' : parsedValue);
-                  
-                  // Set value for our context state (also as number)
+                  if (formattedValue === '' || formattedValue.endsWith('.')) {
+                    // Allow intermediate states like an empty string or "12."
+                    field.onChange(formattedValue);
+                  } else {
+                    const parsedValue = parseFloat(formattedValue);
+                    field.onChange(isNaN(parsedValue) ? '' : parsedValue);
+                  }
+
+                  // Update context
+                  const parsedForContext = parseFloat(formattedValue);
                   const keys = name.split('.');
                   setFormData(prev => {
                     const newFormData = { ...prev };
@@ -132,7 +136,7 @@ export function DataUploadForm() {
                        }
                       current = current[keys[i]];
                     }
-                    current[keys[keys.length - 1]] = isNaN(parsedValue) ? NaN : parsedValue;
+                    current[keys[keys.length - 1]] = isNaN(parsedForContext) ? NaN : parsedForContext;
                     return newFormData;
                   });
                 }}
@@ -283,7 +287,7 @@ export function DataUploadForm() {
         <section className="space-y-4">
             <SectionTitle>Módulos Bombas</SectionTitle>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 border rounded-lg">
-                <div>
+                 <div>
                     <h3 className="text-lg font-semibold font-headline mb-4">Módulo EBAC</h3>
                     <div className="grid grid-cols-2 gap-4">
                         {renderSelectInput('ebac.b1', 'B1')}
@@ -360,4 +364,3 @@ export function DataUploadForm() {
     </Form>
   );
 }
-
