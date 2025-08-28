@@ -115,17 +115,10 @@ export function DataUploadForm() {
                 onChange={e => {
                   const value = e.target.value;
                   const formattedValue = value.replace(/\./g, '').replace(',', '.');
-                  
-                  if (formattedValue === '' || formattedValue.endsWith('.')) {
-                    // Allow intermediate states like an empty string or "12."
-                    field.onChange(formattedValue);
-                  } else {
-                    const parsedValue = parseFloat(formattedValue);
-                    field.onChange(isNaN(parsedValue) ? '' : parsedValue);
-                  }
+                  const parsedValue = parseFloat(formattedValue);
 
-                  // Update context
-                  const parsedForContext = parseFloat(formattedValue);
+                  field.onChange(isNaN(parsedValue) ? '' : parsedValue);
+
                   const keys = name.split('.');
                   setFormData(prev => {
                     const newFormData = { ...prev };
@@ -136,7 +129,7 @@ export function DataUploadForm() {
                        }
                       current = current[keys[i]];
                     }
-                    current[keys[keys.length - 1]] = isNaN(parsedForContext) ? NaN : parsedForContext;
+                    current[keys[keys.length - 1]] = isNaN(parsedValue) ? NaN : parsedValue;
                     return newFormData;
                   });
                 }}
