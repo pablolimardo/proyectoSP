@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect } from 'react';
@@ -20,8 +19,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase-client';
 import { Separator } from './ui/separator';
 
 const statusOptions = ["Marcha", "Detenido", "Lavado", "Purgado", "Local", "Remoto", "Fuera de Servicio"];
@@ -52,7 +49,7 @@ export function DataUploadForm() {
       const pacPpm = (pacMlMin * 1.26 * 60) / caudal;
       setValue('pac.ppm', parseFloat(pacPpm.toFixed(2)));
     } else {
-        setValue('pac.ppm', NaN)
+        setValue('pac.ppm', undefined)
     }
   }, [caudal, pacMlMin, setValue]);
 
@@ -61,7 +58,7 @@ export function DataUploadForm() {
       const sodaPpm = (sodaMlMin * 0.05 * 60) / caudal;
       setValue('soda.ppm', parseFloat(sodaPpm.toFixed(2)));
     } else {
-        setValue('soda.ppm', NaN)
+        setValue('soda.ppm', undefined)
     }
   }, [caudal, sodaMlMin, setValue]);
 
@@ -73,19 +70,25 @@ export function DataUploadForm() {
 
   async function onSubmit(data: RecordSchema) {
     try {
-      const newRecord = {
-        ...data,
-        timestamp: Timestamp.fromDate(new Date(`${data.fecha}T${data.hora}`)),
-      };
-      await addDoc(collection(db, "registros_planta"), newRecord);
-      
+      const response = await fetch('/api/records', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       toast({
         title: 'Éxito',
         description: 'Datos guardados correctamente.',
       });
       resetForm();
     } catch (error) {
-      console.error('Error saving record to Firestore:', error);
+      console.error('Error saving record:', error);
       toast({
         title: 'Error',
         description: 'Ocurrió un error al guardar los datos.',
@@ -117,7 +120,7 @@ export function DataUploadForm() {
                   const formattedValue = value.replace(/\./g, '').replace(',', '.');
                   const parsedValue = parseFloat(formattedValue);
 
-                  field.onChange(isNaN(parsedValue) ? '' : parsedValue);
+                  field.onChange(isNaN(parsedValue) ? undefined : parsedValue);
 
                   const keys = name.split('.');
                   setFormData(prev => {
@@ -129,7 +132,7 @@ export function DataUploadForm() {
                        }
                       current = current[keys[i]];
                     }
-                    current[keys[keys.length - 1]] = isNaN(parsedValue) ? NaN : parsedValue;
+                    current[keys[keys.length - 1]] = isNaN(parsedValue) ? undefined : parsedValue;
                     return newFormData;
                   });
                 }}

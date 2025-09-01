@@ -59,3 +59,39 @@ export interface PlantRecord extends RecordSchema {
   id: string;
   timestamp: Date;
 }
+
+export interface FlatPlantRecord {
+  id: number;
+  fecha: string;
+  hora: string;
+  nombreOperador: string;
+  caudal: number;
+  turbidezAguaCruda?: number;
+  phAguaCruda?: number;
+  temperatura?: number;
+  turbidezAguaClarificada?: number;
+  phAguaClarificada?: number;
+  cloro?: number;
+  pac_ml_min?: number;
+  pac_ppm?: number;
+  soda_ml_min?: number;
+  soda_ppm?: number;
+  ebap_b1?: string;
+  ebap_b2?: string;
+  ebap_b3?: string;
+  ebap_b4?: string;
+  ebac_b1?: string;
+  ebac_b2?: string;
+  ebac_b3?: string;
+  ebac_b4?: string;
+  filtros_f1?: string;
+  filtros_f2?: string;
+  filtros_f3?: string;
+  filtros_f4?: string;
+  filtros_f5?: string;
+  filtros_f6?: string;
+  filtros_f7?: string;
+  filtros_f8?: string;
+  observaciones?: string;
+  timestamp: Date;
+}

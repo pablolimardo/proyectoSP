@@ -5,17 +5,8 @@ import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Calendar as CalendarIcon, Loader2 } from 'lucide-react';
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  orderBy,
-  Timestamp,
-} from 'firebase/firestore';
 
-import { db } from '@/lib/firebase-client';
-import type { PlantRecord } from '@/lib/types';
+import type { FlatPlantRecord } from '@/lib/types';
 import {
   Table,
   TableBody,
@@ -30,38 +21,26 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
-async function fetchRecords(filterDate?: Date): Promise<PlantRecord[]> {
-  let q = query(collection(db, 'registros_planta'), orderBy('timestamp', 'desc'));
-
+async function fetchRecords(filterDate?: Date): Promise<FlatPlantRecord[]> {
+  const url = new URL('/api/records', window.location.origin);
   if (filterDate) {
-    const startOfDay = new Date(filterDate);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(filterDate);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    q = query(
-      collection(db, 'registros_planta'),
-      orderBy('timestamp', 'desc'),
-      where('timestamp', '>=', Timestamp.fromDate(startOfDay)),
-      where('timestamp', '<=', Timestamp.fromDate(endOfDay))
-    );
+    url.searchParams.append('date', filterDate.toISOString());
   }
 
-  const querySnapshot = await getDocs(q);
-  const records: PlantRecord[] = [];
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    records.push({
-      id: doc.id,
-      ...data,
-      timestamp: (data.timestamp as Timestamp).toDate(),
-    } as PlantRecord);
-  });
-  return records;
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const data = await response.json();
+  
+  return data.map((record: any) => ({
+    ...record,
+    timestamp: new Date(record.timestamp),
+  }));
 }
 
 export function HistoryClientPage() {
-  const [records, setRecords] = useState<PlantRecord[]>([]);
+  const [records, setRecords] = useState<FlatPlantRecord[]>([]);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -73,7 +52,7 @@ export function HistoryClientPage() {
       .finally(() => setIsLoading(false));
   }, [date]);
 
-  const handleRowClick = (id: string) => {
+  const handleRowClick = (id: number) => {
     router.push(`/historial/${id}`);
   };
 
