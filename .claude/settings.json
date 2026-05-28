@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(Start-Sleep -Seconds 12)",
+      "Bash(Get-Content \"C:\\\\Users\\\\plima\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-plima-Documents-tecncia-2026-SP-proyectoSP\\\\6cc948df-8aa2-4c4c-8209-399b6dced291\\\\tasks\\\\bltxxoi00.output\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object -Last 20)",
+      "Bash(Invoke-WebRequest -Uri \"http://localhost:9002\" -UseBasicParsing -TimeoutSec 10)",
+      "Bash(Select-Object -ExpandProperty StatusCode)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:9002)"
+    ]
+  }
+}
