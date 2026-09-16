@@ -6,7 +6,6 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', label: 'Cargar Datos' },
-  { href: '/historial', label: 'La Planilla (Historial)' },
   { href: '/guia-dosificacion', label: 'Guía de Dosificación' },
   { href: '/guia-parshall', label: 'Guía Parshall' },
 ];
