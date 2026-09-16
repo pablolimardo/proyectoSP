@@ -1,20 +1,26 @@
-import { HistoryClientPage } from '@/components/history-client-page';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import HistorialPlanillas, { RegistroHistorial } from '@/components/historial';
 
 export default function HistorialPage() {
+  const [historial, setHistorial] = useState<RegistroHistorial[]>([]);
+
+  useEffect(() => {
+    // Leemos el historial guardado en el navegador
+    const datosGuardados = localStorage.getItem('historial_planillas');
+    if (datosGuardados) {
+      try {
+        setHistorial(JSON.parse(datosGuardados));
+      } catch (error) {
+        console.error("Error al cargar el historial:", error);
+      }
+    }
+  }, []);
+
   return (
-    <div className="container mx-auto p-4 md:p-8">
-      <Card className="w-full shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-3xl font-headline">Planilla de Historial de Datos</CardTitle>
-          <CardDescription>
-            Visualice y filtre todos los registros guardados. Haga clic en una fila para ver los detalles.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <HistoryClientPage />
-        </CardContent>
-      </Card>
+    <div className="container mx-auto">
+      <HistorialPlanillas historial={historial} />
     </div>
   );
 }

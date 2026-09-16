@@ -8,7 +8,7 @@ import { FormProvider } from '@/context/form-context';
 
 
 export const metadata: Metadata = {
-  title: 'WaterPlant Pro',
+  title: 'SPSE control de planta',
   description: 'Aplicación para operadores de planta de agua de Servicios Públicos.',
 };
 
